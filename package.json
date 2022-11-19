@@ -1,0 +1,65 @@
+{
+  "name": "vscode-img-upload",
+  "displayName": "vscode-img-upload",
+  "description": "A vscode plugin that automatically uploads pasted images.",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:vscode-img-upload.paste",
+    "onLanguage:markdown"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "vscode-img-upload.paste",
+        "title": "Hello World"
+      },
+      {
+        "command": "vscode-img-upload.delete",
+        "title": "删除"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "vscode-img-upload.delete", 
+          "group": "group1",
+          "when": "resourceLangId == markdown"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.73.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.26.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "axios": "^1.1.3",
+    "crypto": "^1.0.1",
+    "electron-clipboard-ex": "^1.3.3",
+    "form-data": "^4.0.0"
+  }
+}
