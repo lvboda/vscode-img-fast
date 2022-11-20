@@ -10,30 +10,22 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:vscode-img-upload.paste",
-    "onLanguage:markdown"
+    "onLanguage:markdown",
+    "onCommand:vscode-img-upload.upload",
+    "onCommand:vscode-img-upload.delete"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-img-upload.paste",
-        "title": "Hello World"
+        "command": "vscode-img-upload.upload",
+        "title": "上传"
       },
       {
         "command": "vscode-img-upload.delete",
         "title": "删除"
       }
-    ],
-    "menus": {
-      "editor/context": [
-        {
-          "command": "vscode-img-upload.delete", 
-          "group": "group1",
-          "when": "resourceLangId == markdown"
-        }
-      ]
-    }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",

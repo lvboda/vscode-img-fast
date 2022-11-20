@@ -1,4 +1,4 @@
-class CurrentInvokeErrorQueue {
+export const currentInvokeErrorQueue = new class CurrentInvokeErrorQueue {
     private queue = new Set<Error>();
 
     forEach(cb: (value: Error, value2: Error, set: Set<Error>) => void, thisArg?: any) {
@@ -20,21 +20,35 @@ class CurrentInvokeErrorQueue {
     clear() {
         this.queue.clear();
     }
+};
+
+export function invokeWithErrorHandler<T extends (...args: any[]) => any>(cb: T) {
+    return async function(...args: Parameters<T>): Promise<ReturnType<T>> {
+        currentInvokeErrorQueue.clear();
+        let res;
+        try {
+            res = await cb(...args);
+        } catch(error) {
+            currentInvokeErrorQueue.push(error);
+        }
+        return res;
+    };
 }
 
-export const currentInvokeErrorQueue = new CurrentInvokeErrorQueue();
-
-export async function invokeWithErrorHandler(cb: () => any): Promise<any> {
-    currentInvokeErrorQueue.clear();
-    let res: any;
-    try {
-       res = await cb();
-    } catch(error) {
-        currentInvokeErrorQueue.push(error);
-    }
-    return res;
+export function invokeWithErrorHandlerSync<T extends (...args: any[]) => any>(cb: T) {
+    return function(...args: Parameters<T>): ReturnType<T> {
+        currentInvokeErrorQueue.clear();
+        let res;
+        try {
+            res = cb(...args);
+        } catch(error) {
+            currentInvokeErrorQueue.push(error);
+        }
+        return res;
+    };
 }
 
-export function panic(error: any) {
+export function panic(error: any, cb?: (error: any) => any) {
     currentInvokeErrorQueue.push(error);
+    cb?.(error);
 }

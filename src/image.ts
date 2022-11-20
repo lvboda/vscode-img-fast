@@ -23,6 +23,8 @@ enum Format {
     tiff = 'tiff',
 }
 
+export const globalImageList = [];
+
 function toFormat(str: string): Format {
     return Format[str as keyof typeof Format];
 }
@@ -41,28 +43,28 @@ function genImage(fullName: string, name: string, format: Format, path: string, 
     return { fullName, name, format, path, url };
 }
 
-function genImageWithPath(path: string): Image | null {
-    if (!path || !path.length) {
-        return null;
-    }
+export function genImageWith(path: string): Image | null {
+    if (!path || !path.length) { return null; };
 
     const imgFullName = path.substring(path.lastIndexOf("/") !== -1 ?  path.lastIndexOf("/") + 1 : 0, path.length);
     const dotPosition = imgFullName.lastIndexOf(".") + 1;
     const imgName = imgFullName.substring(0, dotPosition);
     const imgFormat = imgFullName.substring(dotPosition, imgFullName.length);
-    if (!imgFullName || !imgName || !imgFormat || !checkFormat(imgFormat)) {
-        return null;
-    }
+    if (!imgFullName || !imgName || !imgFormat || !checkFormat(imgFormat)) { return null; };
 
-    return genImage( imgFullName, imgName, toFormat(imgFormat), path );
+    return genImage(imgFullName, imgName, toFormat(imgFormat), path);
+}
+
+export function genImagesWith(paths?: string[]): Image[] {
+    return paths && paths.length ? paths.map(genImageWith).filter((item) => !!item) as Image[] : [];
 }
 
 export function isImage(path: string): boolean {
-    return !!genImageWithPath(path);
+    return !!genImageWith(path);
 }
 
 export async function getClipboardImages(): Promise<Image[]> {
-    const resolvedImages = readFilePaths().map(genImageWithPath).filter((item) => !!item) as Image[];
+    const resolvedImages = genImagesWith(readFilePaths());
 
     // no image
     if (!hasImage() && !resolvedImages.length) {

@@ -1,20 +1,34 @@
 import * as fs from 'node:fs';
 
-import * as axios from 'axios';
+import { Axios } from 'axios';
 import * as formData from 'form-data';
 
-const request = new axios.Axios({
+const axios = new Axios({
     headers: {
-        Authorization: "BD1010110",
-    }
+        "Authorization": "BD1010110",
+    },
 });
 
-export async function upload(path: string): Promise<string> {
+export async function uploadImage(path: string): Promise<string> {
     await new Promise((resolve) => setTimeout(resolve, 3000));
     const form = new formData();
     form.append("img", fs.createReadStream(path));
 
-    const res = await request.post("http://localhost:8000/", form, { headers: form.getHeaders() });
+    const res = await axios.request({
+        url: "http://localhost:8000/",
+        method: "POST",
+        headers: form.getHeaders(),
+        data: form,
+    });
+
+    return res.status === 200 ? res.data : "";
+}
+
+export async function deleteImage(name: string): Promise<string> {
+    const res = await axios.request({
+        url: `http://localhost:8000/${name}`,
+        method: "DELETE",
+    });
 
     return res.status === 200 ? res.data : "";
 }
