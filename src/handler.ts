@@ -88,11 +88,11 @@ export function createOnDidChangeTextDocumentHandler() {
 
         const outputUrls = await vscode.commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY);
 
-        const outputText = outputUrls.map((item) => `![](${item})`).join();
+        const outputText = outputUrls.map((item) => `![](${item})`).join("\n");
 
         vscode.window.activeTextEditor?.edit(editBuilder => {
-            editBuilder.replace(new vscode.Selection(event.contentChanges[0].range.start, new vscode.Position(event.contentChanges[0].range.start.line, event.contentChanges[0].text.length)), outputText);
-            editBuilder.insert(new vscode.Position(event.contentChanges[0].range.start.line, event.contentChanges[0].text.length), "\n");
+            editBuilder.replace(new vscode.Range(event.contentChanges[0].range.start, new vscode.Position(event.contentChanges[0].range.start.line, event.contentChanges[0].range.start.character + event.contentChanges[0].text.length)), outputText);
+            // editBuilder.insert(new vscode.Position(event.contentChanges[0].range.start.line, event.contentChanges[0].text.length), "\n");
         });
 
         preOutputText = outputText;
