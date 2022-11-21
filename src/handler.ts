@@ -1,10 +1,12 @@
 import * as fs from 'node:fs';
-import * as vscode from 'vscode';
+import { window, commands, Range, Position, Hover, Uri, MarkdownString } from 'vscode';
 
 import { uploadImage, deleteImage } from './request';
-import { getClipboardImages, genImageWith, genImagesWith } from './image';
-import { isPasteImage, matchUrl, getHashPath, emptyDir, imagesDirPath, useStatusBar } from './utils';
-import { COMMAND_UPLOAD_KEY } from './constant';
+import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';
+import { getEventOpts, matchUrls, getHashPath, emptyDir, imagesDirPath, useStatusBar } from './utils';
+import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY } from './constant';
+
+import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 
 type CommandUploadHandlerSetup = { imagePaths?: string[]; showLoading?: boolean; };
 export function createOnCommandUploadHandler() {
@@ -24,9 +26,8 @@ export function createOnCommandUploadHandler() {
             setupShowLoading && show(`正在上传${image.fullName}...`);
             const hashPath = getHashPath(image);
 
-            const url = matchUrl(await uploadImage(hashPath));
-            url && outputUrls.push(url);
-            image.url = url;
+            const url = matchUrls(await uploadImage(hashPath));
+            url.length && outputUrls.push(url[0]) && (image.url = url[0]);
         }
 
         emptyDir(imagesDirPath);
@@ -52,49 +53,63 @@ export function createOnCommandDeleteHandler() {
 
         const { line, startIndex, endIndex } = setup.position;
 
-        vscode.window.activeTextEditor?.edit(editBuilder => {
-            editBuilder.delete(new vscode.Range(new vscode.Position(line, startIndex), new vscode.Position(line, endIndex)));
+        window.activeTextEditor?.edit((editBuilder) => {
+            editBuilder.delete(new Range(new Position(line, startIndex), new Position(line, endIndex)));
         });
     };
 }
 
 export function createOnMarkdownHoverHandler() {
-    return function(document: vscode.TextDocument, position: vscode.Position) {
+    return function(document: TextDocument, position: Position) {
         const textLine = document.lineAt(position.line);
-        const res = matchUrl(textLine.text);
-        
+        const matchedUrls = matchUrls(textLine.text);
 
-        const fin = textLine.text.indexOf(res);
-        const lin = textLine.text.lastIndexOf(res.substring(res.length - 1));
+        for (const url of matchedUrls) {
+            const fin = textLine.text.indexOf(url);
+            const lin = textLine.text.lastIndexOf(url.substring(url.length - 1));
 
-        if (matchUrl(textLine.text) && position.character > fin && position.character < lin) {
-            const startIndex = textLine.text.substring(0, position.character).lastIndexOf("![");
-            const endIndex = textLine.text.substring(position.character, textLine.text.length).indexOf(")") + position.character + 1;
-            const delPosition = { line: position.line, startIndex, endIndex };
-            const commentCommandUri = vscode.Uri.parse(
-                `command:vscode-img-upload.delete?${encodeURIComponent(JSON.stringify({ url: res, position: delPosition }))}`
-            );
-            const contents = new vscode.MarkdownString(`[删除](${commentCommandUri})`);
-            contents.isTrusted = true;
-            return new vscode.Hover(contents);
+            if (matchUrls(textLine.text).length && position.character > fin && position.character < lin) {
+                const startIndex = textLine.text.substring(0, position.character).lastIndexOf("![");
+                const endIndex = textLine.text.substring(position.character, textLine.text.length).indexOf(")") + position.character + 1;
+                const delPosition = { line: position.line, startIndex, endIndex };
+                const commentCommandUri = Uri.parse(
+                    `command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify({ url: url, position: delPosition }))}`
+                );
+                const contents = new MarkdownString(`[删除](${commentCommandUri})`);
+                contents.isTrusted = true;
+                return new Hover(contents);
+            }
         }
     };
 }
 
 export function createOnDidChangeTextDocumentHandler() {
+    let preText = "";
     let preOutputText = "";
-    return async function(event: vscode.TextDocumentChangeEvent) {
-        if (!isPasteImage(event, preOutputText)) { return; };
+    let prePosition: Position;
+    return async function(event: TextDocumentChangeEvent) {
+        const { text, range } = getEventOpts(event);
 
-        const outputUrls = await vscode.commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY);
+        // if not paste image
+        if (!isImage(text) || preOutputText === text) { return; };
+        // if recall
+        if (preText === text && prePosition && range.start.isEqual(prePosition)) { return; };
+
+        const outputUrls = await commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY);
+
+        if (!outputUrls.length) { return; };
 
         const outputText = outputUrls.map((item) => `![](${item})`).join("\n");
 
-        vscode.window.activeTextEditor?.edit(editBuilder => {
-            editBuilder.delete(new vscode.Range(event.contentChanges[0].range.start, new vscode.Position(event.contentChanges[0].range.start.line, event.contentChanges[0].range.start.character + event.contentChanges[0].text.length)));
-            editBuilder.insert(event.contentChanges[0].range.start, outputText);
+        const lineArr = text.split("\n");
+        
+        window.activeTextEditor?.edit((editBuilder) => {
+            editBuilder.delete(new Range(range.start, new Position(range.start.line + (lineArr.length - 1 === -1 ? 0 : lineArr.length -1), lineArr.length > 1 ? lineArr[lineArr.length - 1].length : range.start.character + lineArr[lineArr.length - 1].length)));
+            editBuilder.insert(new Position(range.start.line, range.start.character), outputText);
         });
 
+        preText = text;
         preOutputText = outputText;
+        prePosition = new Position(range.start.line, range.start.character + outputText.length);
     };
 }
