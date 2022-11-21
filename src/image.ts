@@ -1,13 +1,14 @@
 import * as path from 'node:path';
 import { hasImage, readFilePaths, saveImageAsPng } from 'electron-clipboard-ex';
 
-import { imagesDirPath } from './utils';
+import { IMAGE_DIR_PATH } from './constant';
 
 export type Image = {
-    fullName: string;
+    basename: string;
     name: string;
     format: Format;
     path: string;
+    hash?: string;
     url?: string;
 };
 
@@ -23,9 +24,7 @@ enum Format {
     tiff = 'tiff',
 }
 
-export const globalImageList = [];
-
-function toFormat(str: string): Format {
+function toFormat(str: string) {
     return Format[str as keyof typeof Format];
 }
 
@@ -39,31 +38,31 @@ function checkFormat(str: string): str is Format {
     return flag;
 }
 
-function genImage(fullName: string, name: string, format: Format, path: string, url?: string): Image {
-    return { fullName, name, format, path, url };
+function genImage(basename: string, name: string, format: Format, path: string, url?: string): Image {
+    return { basename, name, format, path, url };
 }
 
-export function genImageWith(path: string): Image | null {
-    if (!path || !path.length) { return null; };
+export function genImageWith(filePath?: string) {
+    if (!filePath || !filePath.length) { return null; };
 
-    const imgFullName = path.substring(path.lastIndexOf("/") !== -1 ?  path.lastIndexOf("/") + 1 : 0, path.length);
-    const dotPosition = imgFullName.lastIndexOf(".") + 1;
-    const imgName = imgFullName.substring(0, dotPosition);
-    const imgFormat = imgFullName.substring(dotPosition, imgFullName.length);
-    if (!imgFullName || !imgName || !imgFormat || !checkFormat(imgFormat)) { return null; };
+    const imgBasename = path.basename(filePath);
+    const ext = path.extname(filePath);
+    const imgName = imgBasename.replace(ext, "");
+    const imgFormat = ext.replace(".", "");
+    if (!imgBasename || !imgName || !imgFormat || !checkFormat(imgFormat)) { return null; };
 
-    return genImage(imgFullName, imgName, toFormat(imgFormat), path);
+    return genImage(imgBasename, imgName, toFormat(imgFormat), filePath);
 }
 
-export function genImagesWith(paths?: string[]): Image[] {
-    return paths && paths.length ? paths.map(genImageWith).filter((item) => !!item) as Image[] : [];
+export function genImagesWith(filePaths?: string[]) {
+    return filePaths && filePaths.length ? filePaths.map(genImageWith).filter((item) => !!item) as Image[] : [];
 }
 
-export function isImage(path: string): boolean {
+export function isImage(path: string) {
     return !!genImageWith(path);
 }
 
-export async function getClipboardImages(): Promise<Image[]> {
+export async function getClipboardImages() {
     const resolvedImages = genImagesWith(readFilePaths());
 
     // no image
@@ -73,9 +72,9 @@ export async function getClipboardImages(): Promise<Image[]> {
 
     // is screenshot
     if (hasImage() && !resolvedImages.length) {
-        const tempPath = path.resolve(imagesDirPath, "temp.png");
+        const tempPath = path.resolve(IMAGE_DIR_PATH, "screenshot.png");
         const ok = await saveImageAsPng(tempPath);
-        return ok ? [genImage("temp.png", "temp", Format.png, tempPath)] : [];
+        return ok ? [genImage("screenshot.png", "screenshot", Format.png, tempPath)] : [];
     }
 
     // is local images

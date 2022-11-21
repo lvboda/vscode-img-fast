@@ -1,15 +1,15 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as crypto from 'crypto';
-import * as vscode from 'vscode';
 
 import { Image } from './image';
+import { IMAGE_DIR_PATH } from './constant';
 
-export const imagesDirPath = path.resolve(__dirname, "images");
+import type { TextDocumentChangeEvent, Range } from 'vscode';
 
-export function getEventOpts(event: vscode.TextDocumentChangeEvent) {
+export function getEventOpts(event: TextDocumentChangeEvent) {
     const cc = event.contentChanges;
-    return cc.length ? cc[0] : { text: "", range: {} as vscode.Range };
+    return cc.length ? cc[0] : { text: "", range: {} as Range };
 }
 
 export function getFileMd5(buffer: any) {
@@ -19,7 +19,8 @@ export function getFileMd5(buffer: any) {
 export function getHashPath(image: Image) {
     const buffer = fs.readFileSync(image.path);
     const hash = getFileMd5(buffer);
-    const hashPath = path.resolve(imagesDirPath, `${hash}.${image.format}`);
+    image.hash = hash;
+    const hashPath = path.resolve(IMAGE_DIR_PATH, `${hash}.${image.format}`);
     fs.copyFileSync(image.path, hashPath);
     return hashPath;
 }
@@ -37,21 +38,7 @@ export function emptyDir(path: string) {
     });
 }
 
-export function matchUrls(str: string): string[] {
-    const matchedUrls = str.match(/(https?|http|ftp|file):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g);
+export function matchUrls(str: string) {
+    const matchedUrls = str.match(/(https?|http|ftp):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g) as string[];
     return matchedUrls ? matchedUrls : [];
-}
-
-const globalStatusBar = vscode.window.createStatusBarItem();
-export function useStatusBar() {
-    function show(text: string, tooltip?: string) {
-        globalStatusBar.tooltip = new vscode.MarkdownString(tooltip);
-        globalStatusBar.text = text;
-        globalStatusBar.show();
-    }
-
-    function hide() {
-        globalStatusBar.hide();
-    }
-    return { show, hide };
 }

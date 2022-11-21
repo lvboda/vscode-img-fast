@@ -1,84 +1,86 @@
 import * as fs from 'node:fs';
-import { window, commands, Range, Position, Hover, Uri, MarkdownString } from 'vscode';
+import * as path from 'node:path';
+import { window, commands, Range, Position, Hover, Uri, MarkdownString, EndOfLine } from 'vscode';
 
+import { IMAGE_DIR_PATH } from './constant';
 import { uploadImage, deleteImage } from './request';
-import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';
-import { getEventOpts, matchUrls, getHashPath, emptyDir, imagesDirPath, useStatusBar } from './utils';
+import { showStatusBar, hideStatusBar } from './record';
 import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY } from './constant';
+import { getEventOpts, matchUrls, getHashPath, emptyDir } from './utils';
+import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';
 
 import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 
-type CommandUploadHandlerSetup = { imagePaths?: string[]; showLoading?: boolean; };
 export function createOnCommandUploadHandler() {
-    return async function(setup?: CommandUploadHandlerSetup) {
-        const { show, hide } = useStatusBar();
+    return async function(imagePaths?: string[], showTips = true) {
+        fs.access(IMAGE_DIR_PATH, fs.constants.F_OK, (err) => (err && fs.mkdirSync(IMAGE_DIR_PATH)));
 
-        fs.access(imagesDirPath, fs.constants.F_OK, (err) => (err && fs.mkdirSync(imagesDirPath)));
-
-        const setupImagePaths = setup && setup.imagePaths, setupShowLoading = (setup && setup.showLoading) ?? true;
-
-        const inputImages = genImagesWith(setupImagePaths);
-
+        const inputImages = genImagesWith(imagePaths);
         const images = inputImages.length ? inputImages : await getClipboardImages();
         const outputUrls = [];
         
         for (const image of images) {
-            setupShowLoading && show(`正在上传${image.fullName}...`);
-            const hashPath = getHashPath(image);
+            showTips && showStatusBar(`正在上传${image.basename}...`);
 
+            const hashPath = getHashPath(image);
             const url = matchUrls(await uploadImage(hashPath));
             url.length && outputUrls.push(url[0]) && (image.url = url[0]);
         }
 
-        emptyDir(imagesDirPath);
-        hide();
+        emptyDir(IMAGE_DIR_PATH);
+        hideStatusBar();
 
         return outputUrls;
     };
 }
 
-type CommandDeleteHandlerSetup = { url: string; position?: { line: number; startIndex: number; endIndex: number; }; };
 export function createOnCommandDeleteHandler() {
-    return async function(setup: CommandDeleteHandlerSetup) {
-        const { show, hide } = useStatusBar();
-
-        const image = genImageWith(setup.url);
+    return async function(url: string, delPosition?: { line: number; startIndex: number; endIndex: number; }) {
+        const image = genImageWith(url);
         if (!image) { return; };
 
-        show(`正在删除${image.fullName}`);
-        const res = await deleteImage(image.fullName);
-        hide();
+        showStatusBar(`正在删除${image.basename}`);
+        const res = await deleteImage(image.basename);
+        hideStatusBar();
         if (!res) { return; };
-        if (!setup.position) { return; };
 
-        const { line, startIndex, endIndex } = setup.position;
-
-        window.activeTextEditor?.edit((editBuilder) => {
-            editBuilder.delete(new Range(new Position(line, startIndex), new Position(line, endIndex)));
-        });
+        if (!delPosition) { return; };
+        const { line, startIndex, endIndex } = delPosition;
+        window.activeTextEditor?.edit((editBuilder) => editBuilder.delete(new Range(new Position(line, startIndex), new Position(line, endIndex))));
     };
 }
 
 export function createOnMarkdownHoverHandler() {
     return function(document: TextDocument, position: Position) {
-        const textLine = document.lineAt(position.line);
-        const matchedUrls = matchUrls(textLine.text);
+        const lineText = document.lineAt(position.line).text;
+        const matchedUrls = matchUrls(lineText).filter((url) => (!!path.extname(url) && isImage(url)) || !path.extname(url));
 
-        for (const url of matchedUrls) {
-            const fin = textLine.text.indexOf(url);
-            const lin = textLine.text.lastIndexOf(url.substring(url.length - 1));
+        for (const matchedUrl of matchedUrls) {
+            // exclude cursor not on link
+            const urlStartIndex = lineText.indexOf(matchedUrl) - 1;
+            const urlEndIndex = lineText.indexOf(matchedUrl) + matchedUrl.length;
+            if (!(position.character > urlStartIndex && position.character < urlEndIndex)) { continue; };
 
-            if (matchUrls(textLine.text).length && position.character > fin && position.character < lin) {
-                const startIndex = textLine.text.substring(0, position.character).lastIndexOf("![");
-                const endIndex = textLine.text.substring(position.character, textLine.text.length).indexOf(")") + position.character + 1;
-                const delPosition = { line: position.line, startIndex, endIndex };
-                const commentCommandUri = Uri.parse(
-                    `command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify({ url: url, position: delPosition }))}`
-                );
-                const contents = new MarkdownString(`[删除](${commentCommandUri})`);
-                contents.isTrusted = true;
-                return new Hover(contents);
+            // find index: ![...](...)
+            let startIndex = lineText.lastIndexOf("![", position.character);
+            let endIndex = lineText.indexOf(")", position.character);
+
+            // find index: <img src="..."></img>
+            if (startIndex === -1 || endIndex === -1) {
+                startIndex = lineText.lastIndexOf("<", position.character);
+                endIndex = lineText.indexOf("/>", position.character);
+                endIndex === -1 && (endIndex = lineText.indexOf("img>", position.character));
+                endIndex === -1 && (endIndex = lineText.indexOf(">", position.character));
             }
+
+            const delPosition = startIndex !== -1 && endIndex !== -1 && { line: position.line, startIndex, endIndex: endIndex + 1 };
+            const commandArgs = [ matchedUrl, delPosition ];
+            const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify(commandArgs))}`);
+
+            const contents = new MarkdownString(`[删除](${commandUri})`);
+            contents.isTrusted = true;
+
+            return new Hover(contents);
         }
     };
 }
@@ -93,24 +95,29 @@ export function createOnDidChangeTextDocumentHandler() {
         // if not paste image
         if (!isImage(text) || preOutputText === text) { return; };
         // if recall
-        console.log(preText === text, prePosition, start, 123);
         if (preText === text && prePosition && start.isEqual(prePosition)) { return; };
 
         const outputUrls = await commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY);
 
         if (!outputUrls.length) { return; };
 
-        const outputText = outputUrls.map((item) => `![](${item})`).join("\n");
-
-        const lineArr = text.split("\n");
+        const outputList = outputUrls.map((item) => `![](${item})`);
+        const linesText = text.split("\n");
         
         window.activeTextEditor?.edit((editBuilder) => {
-            editBuilder.delete(new Range(start, new Position(start.line + (lineArr.length - 1 === -1 ? 0 : lineArr.length -1), lineArr.length > 1 ? lineArr[lineArr.length - 1].length : start.character + lineArr[lineArr.length - 1].length)));
-            editBuilder.insert(new Position(start.line, start.character), outputText);
+            const delEndTextLen = linesText[linesText.length - 1].length;
+            const delLine = start.line + linesText.length -1;
+            const delCharacter = linesText.length > 1 ? delEndTextLen : start.character + delEndTextLen;
+
+            editBuilder.delete(new Range(start, new Position(delLine, delCharacter)));
+            editBuilder.insert(start, outputList.join("\n"));
         });
 
+        const preEndTextLen = outputList[outputList.length - 1].length;
+        const preLine = start.line + outputList.length - 1;
+        const preCharacter = outputList.length > 1 ? preEndTextLen : start.character + preEndTextLen;
+        prePosition = new Position(preLine, preCharacter);
+        preOutputText = outputList.join("\n");
         preText = text;
-        preOutputText = outputText;
-        prePosition = new Position(start.line + outputText.split("\n").length - 1, outputText.split("\n").length > 1 ? outputText.split("\n")[outputText.split("\n").length - 1].length : start.character + outputText.split("\n")[outputText.split("\n").length - 1].length);
     };
 }

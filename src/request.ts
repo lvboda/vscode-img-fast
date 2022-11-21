@@ -9,12 +9,11 @@ const axios = new Axios({
     },
 });
 
-export async function uploadImage(path: string): Promise<string> {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+export async function uploadImage(path: string) {
     const form = new formData();
     form.append("img", fs.createReadStream(path));
 
-    const res = await axios.request({
+    const res = await axios.request<string>({
         url: "http://localhost:8000/",
         method: "POST",
         headers: form.getHeaders(),
@@ -24,8 +23,8 @@ export async function uploadImage(path: string): Promise<string> {
     return res.status === 200 ? res.data : "";
 }
 
-export async function deleteImage(name: string): Promise<string> {
-    const res = await axios.request({
+export async function deleteImage(name: string) {
+    const res = await axios.request<string>({
         url: `http://localhost:8000/${name}`,
         method: "DELETE",
     });
