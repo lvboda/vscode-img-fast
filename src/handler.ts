@@ -88,12 +88,13 @@ export function createOnDidChangeTextDocumentHandler() {
     let preOutputText = "";
     let prePosition: Position;
     return async function(event: TextDocumentChangeEvent) {
-        const { text, range } = getEventOpts(event);
+        const { text, range: { start } } = getEventOpts(event);
 
         // if not paste image
         if (!isImage(text) || preOutputText === text) { return; };
         // if recall
-        if (preText === text && prePosition && range.start.isEqual(prePosition)) { return; };
+        console.log(preText === text, prePosition, start, 123);
+        if (preText === text && prePosition && start.isEqual(prePosition)) { return; };
 
         const outputUrls = await commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY);
 
@@ -104,12 +105,12 @@ export function createOnDidChangeTextDocumentHandler() {
         const lineArr = text.split("\n");
         
         window.activeTextEditor?.edit((editBuilder) => {
-            editBuilder.delete(new Range(range.start, new Position(range.start.line + (lineArr.length - 1 === -1 ? 0 : lineArr.length -1), lineArr.length > 1 ? lineArr[lineArr.length - 1].length : range.start.character + lineArr[lineArr.length - 1].length)));
-            editBuilder.insert(new Position(range.start.line, range.start.character), outputText);
+            editBuilder.delete(new Range(start, new Position(start.line + (lineArr.length - 1 === -1 ? 0 : lineArr.length -1), lineArr.length > 1 ? lineArr[lineArr.length - 1].length : start.character + lineArr[lineArr.length - 1].length)));
+            editBuilder.insert(new Position(start.line, start.character), outputText);
         });
 
         preText = text;
         preOutputText = outputText;
-        prePosition = new Position(range.start.line, range.start.character + outputText.length);
+        prePosition = new Position(start.line + outputText.split("\n").length - 1, outputText.split("\n").length > 1 ? outputText.split("\n")[outputText.split("\n").length - 1].length : start.character + outputText.split("\n")[outputText.split("\n").length - 1].length);
     };
 }
