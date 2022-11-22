@@ -3,7 +3,7 @@ import * as path from 'node:path';
 import { window, commands, Range, Position, Hover, Uri, MarkdownString, EndOfLine } from 'vscode';
 
 import { uploadImage, deleteImage } from './request';
-import { showStatusBar, hideStatusBar } from './record';
+import { showStatusBar, hideStatusBar } from './tips';
 import { getEventOpts, matchUrls, getHashPath, emptyDir } from './utils';
 import { invokeWithErrorHandler, invokeWithErrorHandlerSync } from './error';
 import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';

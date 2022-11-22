@@ -1,4 +1,4 @@
-import { window } from 'vscode';
+import { showMessage } from './tips';
 
 export function invokeWithErrorHandler<T extends (...args: any[]) => any>(cb: T) {
     return async function(...args: Parameters<T>): Promise<ReturnType<T>> {
@@ -21,6 +21,6 @@ export function invokeWithErrorHandlerSync<T extends (...args: any[]) => any>(cb
 }
 
 export function panic(error: any, cb?: (error: any) => any) {
-    !cb && window.showErrorMessage(`[ img-upload ] ${error}`);
+    !cb && showMessage("error", error);
     cb?.(error);
 }
