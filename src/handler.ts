@@ -2,17 +2,17 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { window, commands, Range, Position, Hover, Uri, MarkdownString, EndOfLine } from 'vscode';
 
-import { IMAGE_DIR_PATH } from './constant';
 import { uploadImage, deleteImage } from './request';
 import { showStatusBar, hideStatusBar } from './record';
-import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY } from './constant';
 import { getEventOpts, matchUrls, getHashPath, emptyDir } from './utils';
+import { invokeWithErrorHandler, invokeWithErrorHandlerSync } from './error';
 import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';
+import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } from './constant';
 
 import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 
 export function createOnCommandUploadHandler() {
-    return async function(imagePaths?: string[], showTips = true) {
+    async function handler(imagePaths?: string[], showTips = true) {
         fs.access(IMAGE_DIR_PATH, fs.constants.F_OK, (err) => (err && fs.mkdirSync(IMAGE_DIR_PATH)));
 
         const inputImages = genImagesWith(imagePaths);
@@ -32,10 +32,12 @@ export function createOnCommandUploadHandler() {
 
         return outputUrls;
     };
+
+    return invokeWithErrorHandler(handler);
 }
 
 export function createOnCommandDeleteHandler() {
-    return async function(url: string, delPosition?: { line: number; startIndex: number; endIndex: number; }) {
+    async function handler(url: string, delPosition?: { line: number; startIndex: number; endIndex: number; }) {
         const image = genImageWith(url);
         if (!image) { return; };
 
@@ -48,10 +50,12 @@ export function createOnCommandDeleteHandler() {
         const { line, startIndex, endIndex } = delPosition;
         window.activeTextEditor?.edit((editBuilder) => editBuilder.delete(new Range(new Position(line, startIndex), new Position(line, endIndex))));
     };
+
+    return invokeWithErrorHandler(handler);
 }
 
 export function createOnMarkdownHoverHandler() {
-    return function(document: TextDocument, position: Position) {
+    function handler(document: TextDocument, position: Position) {
         const lineText = document.lineAt(position.line).text;
         const matchedUrls = matchUrls(lineText).filter((url) => (!!path.extname(url) && isImage(url)) || !path.extname(url));
 
@@ -83,13 +87,15 @@ export function createOnMarkdownHoverHandler() {
             return new Hover(contents);
         }
     };
+
+    return invokeWithErrorHandlerSync(handler);
 }
 
 export function createOnDidChangeTextDocumentHandler() {
     let preText = "";
     let preOutputText = "";
     let prePosition: Position;
-    return async function(event: TextDocumentChangeEvent) {
+    async function handler(event: TextDocumentChangeEvent) {
         const { text, range: { start } } = getEventOpts(event);
 
         // if not paste image
@@ -120,4 +126,6 @@ export function createOnDidChangeTextDocumentHandler() {
         preOutputText = outputList.join("\n");
         preText = text;
     };
+    
+    return invokeWithErrorHandler(handler);
 }
