@@ -1,10 +1,10 @@
-import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { window, commands, Range, Position, Hover, Uri, MarkdownString, EndOfLine } from 'vscode';
 
+import { beforeUpload, uploaded } from './hook';
 import { uploadImage, deleteImage } from './request';
 import { showStatusBar, hideStatusBar } from './tips';
-import { getEventOpts, matchUrls, getHashPath, emptyDir } from './utils';
+import { getEventOpts, matchUrls, initPath, emptyDir, readRecord } from './utils';
 import { invokeWithErrorHandler, invokeWithErrorHandlerSync } from './error';
 import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';
 import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } from './constant';
@@ -13,18 +13,19 @@ import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 
 export function createOnCommandUploadHandler() {
     async function handler(imagePaths?: string[], showTips = true) {
-        fs.access(IMAGE_DIR_PATH, fs.constants.F_OK, (err) => (err && fs.mkdirSync(IMAGE_DIR_PATH)));
+        initPath();
 
         const inputImages = genImagesWith(imagePaths);
         const images = inputImages.length ? inputImages : await getClipboardImages();
         const outputUrls = [];
         
         for (const image of images) {
-            showTips && showStatusBar(`正在上传${image.basename}...`);
-
-            const hashPath = getHashPath(image);
-            const url = matchUrls(await uploadImage(hashPath));
-            url.length && outputUrls.push(url[0]) && (image.url = url[0]);
+            showTips && showStatusBar(`正在上传${image.name}...`);
+            beforeUpload(image);
+            const res = await uploadImage(image);
+            const matchedUrls = matchUrls(res.data);
+            uploaded(res, image);
+            matchedUrls.length && outputUrls.push(matchedUrls[0]);
         }
 
         emptyDir(IMAGE_DIR_PATH);
@@ -41,8 +42,8 @@ export function createOnCommandDeleteHandler() {
         const image = genImageWith(url);
         if (!image) { return; };
 
-        showStatusBar(`正在删除${image.basename}`);
-        const res = await deleteImage(image.basename);
+        showStatusBar(`正在删除${image.name}`);
+        const res = await deleteImage(image.name);
         hideStatusBar();
         if (!res) { return; };
 
@@ -77,11 +78,18 @@ export function createOnMarkdownHoverHandler() {
                 endIndex === -1 && (endIndex = lineText.indexOf(">", position.character));
             }
 
-            const delPosition = startIndex !== -1 && endIndex !== -1 && { line: position.line, startIndex, endIndex: endIndex + 1 };
+            // find current url
+            if (startIndex === -1 || endIndex === -1) {
+                startIndex = lineText.indexOf(matchedUrl);
+                endIndex = startIndex + matchedUrl.length;
+            }
+
+            const hasRecord = readRecord().find((item) => (item.image.url === matchedUrl));
+
+            const delPosition = { line: position.line, startIndex, endIndex: endIndex + 1 };
             const commandArgs = [ matchedUrl, delPosition ];
             const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify(commandArgs))}`);
-
-            const contents = new MarkdownString(`[删除](${commandUri})`);
+            const contents = new MarkdownString(`[ img-upload ]: [同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
             contents.isTrusted = true;
 
             return new Hover(contents);

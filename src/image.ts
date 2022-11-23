@@ -4,11 +4,11 @@ import { hasImage, readFilePaths, saveImageAsPng } from 'electron-clipboard-ex';
 import { IMAGE_DIR_PATH } from './constant';
 
 export type Image = {
-    basename: string;
     name: string;
     format: Format;
     path: string;
-    hash?: string;
+    beforeUploadPath: string;
+    beforeUploadName: string;
     url?: string;
 };
 
@@ -28,30 +28,36 @@ function toFormat(str: string) {
     return Format[str as keyof typeof Format];
 }
 
-function checkFormat(str: string): str is Format {
+function checkFormat(ext: string): ext is Format {
     let flag = false;
 
     for (const item in Format) {
-        str === item && (flag = true);
+        ext === item && (flag = true);
     }
 
     return flag;
 }
 
-function genImage(basename: string, name: string, format: Format, path: string, url?: string): Image {
-    return { basename, name, format, path, url };
+function genImage(
+    name: string,
+    format: Format,
+    path: string,
+    beforeUploadPath = "",
+    beforeUploadName = "",
+    url?: string
+): Image {
+    return { name, format, path, beforeUploadPath, beforeUploadName, url };
 }
 
 export function genImageWith(filePath?: string) {
     if (!filePath || !filePath.length) { return null; };
 
-    const imgBasename = path.basename(filePath);
+    const imgName = path.basename(filePath);
     const ext = path.extname(filePath);
-    const imgName = imgBasename.replace(ext, "");
     const imgFormat = ext.replace(".", "");
-    if (!imgBasename || !imgName || !imgFormat || !checkFormat(imgFormat)) { return null; };
+    if (!imgName || !imgFormat || !checkFormat(imgFormat)) { return null; };
 
-    return genImage(imgBasename, imgName, toFormat(imgFormat), filePath);
+    return genImage(imgName, toFormat(imgFormat), filePath);
 }
 
 export function genImagesWith(filePaths?: string[]) {
@@ -74,7 +80,7 @@ export async function getClipboardImages() {
     if (hasImage() && !resolvedImages.length) {
         const tempPath = path.resolve(IMAGE_DIR_PATH, "screenshot.png");
         const ok = await saveImageAsPng(tempPath);
-        return ok ? [genImage("screenshot.png", "screenshot", Format.png, tempPath)] : [];
+        return ok ? [genImage("screenshot.png", Format.png, tempPath)] : [];
     }
 
     // is local images

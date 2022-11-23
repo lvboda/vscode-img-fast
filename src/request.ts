@@ -4,6 +4,7 @@ import { Axios } from 'axios';
 import * as formData from 'form-data';
 
 import type { AxiosResponse } from 'axios';
+import type { Image } from './image';
 
 const axios = new Axios({
     headers: {
@@ -19,18 +20,16 @@ function resolveRes(res: AxiosResponse<string>) {
     return data;
 }
 
-export async function uploadImage(path: string) {
+export async function uploadImage(image: Image) {
     const form = new formData();
-    form.append("img", fs.createReadStream(path));
+    form.append("img", fs.createReadStream(image.beforeUploadPath));
 
-    const res = await axios.request<string>({
+    return await axios.request<string>({
         url: "http://localhost:8000/",
         method: "POST",
         headers: form.getHeaders(),
         data: form,
     });
-
-    return resolveRes(res);
 }
 
 export async function deleteImage(name: string) {
