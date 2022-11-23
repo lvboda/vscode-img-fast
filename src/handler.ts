@@ -7,7 +7,7 @@ import { showStatusBar, hideStatusBar } from './tips';
 import { getEventOpts, matchUrls, initPath, emptyDir, readRecord } from './utils';
 import { invokeWithErrorHandler, invokeWithErrorHandlerSync } from './error';
 import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';
-import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } from './constant';
+import { PLUGIN_NAME, COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } from './constant';
 
 import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 
@@ -85,11 +85,11 @@ export function createOnMarkdownHoverHandler() {
             }
 
             const hasRecord = readRecord().find((item) => (item.image.url === matchedUrl));
-
+    
             const delPosition = { line: position.line, startIndex, endIndex: endIndex + 1 };
             const commandArgs = [ matchedUrl, delPosition ];
             const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify(commandArgs))}`);
-            const contents = new MarkdownString(`[ img-upload ]: [同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
+            const contents = new MarkdownString(`[同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
             contents.isTrusted = true;
 
             return new Hover(contents);

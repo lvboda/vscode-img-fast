@@ -1,8 +1,10 @@
 import * as path from 'node:path';
 
-export const COMMAND_UPLOAD_KEY = "vscode-img-upload.upload";
+export const PLUGIN_NAME = "clipboard-img-uploader";
 
-export const COMMAND_DELETE_KEY = "vscode-img-upload.delete";
+export const COMMAND_UPLOAD_KEY = `${PLUGIN_NAME}.upload`;
+
+export const COMMAND_DELETE_KEY = `${PLUGIN_NAME}.delete`;
 
 export const IMAGE_DIR_PATH = path.resolve(__dirname, "images");
 

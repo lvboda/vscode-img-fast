@@ -1,7 +1,9 @@
 import { window, MarkdownString } from 'vscode';
 
+import { PLUGIN_NAME } from './constant';
+
 function genMessage(message: string) {
-    return `[ img-upload ] ${message}`;
+    return `[ ${PLUGIN_NAME} ] ${message}`;
 }
 
 const globalStatusBar = window.createStatusBarItem();

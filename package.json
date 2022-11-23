@@ -1,7 +1,7 @@
 {
-  "name": "vscode-img-upload",
-  "displayName": "vscode-img-upload",
-  "description": "A vscode plugin that automatically uploads pasted images.",
+  "name": "vscode-clipboard-img-uploader",
+  "displayName": "Clipboard img uploader",
+  "description": "Quickly uploads clipboard images in markdown.",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.73.0"
@@ -11,18 +11,18 @@
   ],
   "activationEvents": [
     "onLanguage:markdown",
-    "onCommand:vscode-img-upload.upload",
-    "onCommand:vscode-img-upload.delete"
+    "onCommand:clipboard-img-uploader.upload",
+    "onCommand:clipboard-img-uploader.delete"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "vscode-img-upload.upload",
+        "command": "clipboard-img-uploader.upload",
         "title": "上传"
       },
       {
-        "command": "vscode-img-upload.delete",
+        "command": "clipboard-img-uploader.delete",
         "title": "删除"
       }
     ]
