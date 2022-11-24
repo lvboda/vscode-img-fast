@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 
-export const PLUGIN_NAME = "img-quick";
+export const PLUGIN_NAME = "img-fast";
 
 export const COMMAND_UPLOAD_KEY = `${PLUGIN_NAME}.upload`;
 
