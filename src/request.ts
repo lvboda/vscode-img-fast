@@ -1,3 +1,4 @@
+'use strict';
 import * as fs from 'node:fs';
 
 import { Axios } from 'axios';

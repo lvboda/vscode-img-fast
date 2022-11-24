@@ -1,3 +1,4 @@
+'use strict';
 import { showMessage } from './tips';
 
 export function invokeWithErrorHandler<T extends (...args: any[]) => any>(cb: T) {

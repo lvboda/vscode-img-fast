@@ -1,5 +1,7 @@
-import { getHashPath, matchUrls, writeRecord } from './utils';
+'use strict';
 import { genImageWith } from './image';
+import { writeRecord } from './record';
+import { getHashPath, matchUrls } from './utils';
 
 import type { AxiosResponse } from 'axios';
 import type { Image } from './image';
@@ -24,4 +26,6 @@ export function uploaded(res: AxiosResponse, image: Image) {
 
     image.url = matchedUrls[0];
     writeRecord(image, res);
+
+    return image.url ? `![](${image.url})` : "";
 }

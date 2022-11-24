@@ -1,3 +1,4 @@
+'use strict';
 import * as path from 'node:path';
 
 export const PLUGIN_NAME = "img-fast";

@@ -1,3 +1,4 @@
+'use strict';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import * as crypto from 'crypto';
@@ -5,7 +6,6 @@ import * as crypto from 'crypto';
 import { IMAGE_DIR_PATH, RECORD_FILE_PATH } from './constant';
 
 import type { TextDocumentChangeEvent, Range } from 'vscode';
-import type { AxiosResponse } from 'axios';
 import type { Image } from './image';
 
 export function getEventOpts(event: TextDocumentChangeEvent) {
@@ -13,13 +13,20 @@ export function getEventOpts(event: TextDocumentChangeEvent) {
     return cc.length ? cc[0] : { text: "", range: {} as Range };
 }
 
-export function getFileMd5(buffer: any) {
-    return crypto.createHash('md5').update(buffer, 'utf8').digest('hex');
+export function getFileHash(path: string) {
+    try {
+        const buffer = fs.readFileSync(path);
+        return crypto.createHash('md5').update(buffer).digest('hex');
+    } catch(err: any) {
+        if (err.code === 'ENOENT') {
+            return "";
+        }
+        throw err;
+    }
 }
 
 export function getHashPath(image: Image) {
-    const buffer = fs.readFileSync(image.path);
-    const hash = getFileMd5(buffer);
+    const hash = getFileHash(image.path);
     const hashPath = path.resolve(IMAGE_DIR_PATH, `${hash}.${image.format}`);
     fs.copyFileSync(image.path, hashPath);
     return hashPath;
@@ -53,22 +60,4 @@ export async function initPath() {
             });
         });
     });
-}
-
-type RecordItem = {
-    time: string | Date;
-    image: Image;
-    response: AxiosResponse;
-};
-
-export function readRecord() {
-    return JSON.parse(fs.readFileSync(RECORD_FILE_PATH, { encoding: "utf8" })) as RecordItem[];
-}
-
-export function writeRecord(image: Image, response: AxiosResponse, maxStorageCount = 500) {
-    delete response.request;
-    const record = readRecord();
-    record.length > maxStorageCount && record.shift();
-    record.push({ time: new Date(), image, response });
-    fs.writeFileSync(RECORD_FILE_PATH, JSON.stringify(record), { encoding: "utf8" });
 }

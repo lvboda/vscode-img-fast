@@ -1,12 +1,15 @@
+'use strict';
 import * as path from 'node:path';
 import { hasImage, readFilePaths, saveImageAsPng } from 'electron-clipboard-ex';
 
 import { IMAGE_DIR_PATH } from './constant';
+import { getFileHash } from './utils';
 
 export type Image = {
     name: string;
     format: Format;
     path: string;
+    hash: string;
     beforeUploadPath: string;
     beforeUploadName: string;
     url?: string;
@@ -42,11 +45,12 @@ function genImage(
     name: string,
     format: Format,
     path: string,
+    hash: string,
     beforeUploadPath = "",
     beforeUploadName = "",
     url?: string
 ): Image {
-    return { name, format, path, beforeUploadPath, beforeUploadName, url };
+    return { name, format, path, hash, beforeUploadPath, beforeUploadName, url };
 }
 
 export function genImageWith(filePath?: string) {
@@ -57,7 +61,7 @@ export function genImageWith(filePath?: string) {
     const imgFormat = ext.replace(".", "");
     if (!imgName || !imgFormat || !checkFormat(imgFormat)) { return null; };
 
-    return genImage(imgName, toFormat(imgFormat), filePath);
+    return genImage(imgName, toFormat(imgFormat), filePath, getFileHash(filePath));
 }
 
 export function genImagesWith(filePaths?: string[]) {
@@ -66,6 +70,15 @@ export function genImagesWith(filePaths?: string[]) {
 
 export function isImage(path: string) {
     return !!genImageWith(path);
+}
+
+export function isEqual(image1: Image, image2: Image) {
+    return (
+        image1.hash === image2.hash &&
+        image1.beforeUploadPath === image2.beforeUploadPath &&
+        image1.beforeUploadName === image2.beforeUploadName &&
+        image1.url === image2.url
+    );
 }
 
 export async function getClipboardImages() {
@@ -80,7 +93,7 @@ export async function getClipboardImages() {
     if (hasImage() && !resolvedImages.length) {
         const tempPath = path.resolve(IMAGE_DIR_PATH, "screenshot.png");
         const ok = await saveImageAsPng(tempPath);
-        return ok ? [genImage("screenshot.png", Format.png, tempPath)] : [];
+        return ok ? [genImage("screenshot.png", Format.png, tempPath, getFileHash(tempPath))] : [];
     }
 
     // is local images

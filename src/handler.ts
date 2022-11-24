@@ -1,37 +1,46 @@
+'use strict';
 import * as path from 'node:path';
-import { window, commands, Range, Position, Hover, Uri, MarkdownString, EndOfLine } from 'vscode';
+import { window, commands, Range, Position, Hover, Uri, MarkdownString } from 'vscode';
 
+import { readRecord } from './record';
 import { beforeUpload, uploaded } from './hook';
 import { uploadImage, deleteImage } from './request';
 import { showStatusBar, hideStatusBar } from './tips';
-import { getEventOpts, matchUrls, initPath, emptyDir, readRecord } from './utils';
+import { isImage, getClipboardImages, genImageWith } from './image';
+import { getEventOpts, matchUrls, initPath, emptyDir } from './utils';
 import { invokeWithErrorHandler, invokeWithErrorHandlerSync } from './error';
-import { isImage, getClipboardImages, genImageWith, genImagesWith } from './image';
 import { PLUGIN_NAME, COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } from './constant';
 
 import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 
 export function createOnCommandUploadHandler() {
-    async function handler(imagePaths?: string[], showTips = true) {
+    async function handler(editRange?: Range) {
         await initPath();
 
-        const inputImages = genImagesWith(imagePaths);
-        const images = inputImages.length ? inputImages : await getClipboardImages();
-        const outputUrls = [];
+        const images = await getClipboardImages();
+        const outputTexts: string[] = [];
         
         for (const image of images) {
-            showTips && showStatusBar(`正在上传${image.name}...`);
+            showStatusBar(`正在上传${image.name}...`);
             beforeUpload(image);
-            const res = await uploadImage(image);
-            const matchedUrls = matchUrls(res.data);
-            uploaded(res, image);
-            matchedUrls.length && outputUrls.push(matchedUrls[0]);
+            const text = uploaded(await uploadImage(image), image);
+            text.length && outputTexts.push(text);
         }
+
+        const editor = window.activeTextEditor;
+        editor?.edit((editBuilder) => {
+            if (editRange) {
+                editBuilder.delete(editRange);
+                editBuilder.insert(editRange.start, outputTexts.join("\n"));
+            } else {
+                editBuilder.insert(editor.selection.start, outputTexts.join("\n"));
+            }
+        });
 
         emptyDir(IMAGE_DIR_PATH);
         hideStatusBar();
 
-        return outputUrls;
+        return outputTexts;
     };
 
     return invokeWithErrorHandler(handler);
@@ -89,7 +98,7 @@ export function createOnMarkdownHoverHandler() {
             const delPosition = { line: position.line, startIndex, endIndex: endIndex + 1 };
             const commandArgs = [ matchedUrl, delPosition ];
             const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify(commandArgs))}`);
-            const contents = new MarkdownString(`[同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
+            const contents = new MarkdownString(`[ ${PLUGIN_NAME} ] [同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
             contents.isTrusted = true;
 
             return new Hover(contents);
@@ -111,27 +120,23 @@ export function createOnDidChangeTextDocumentHandler() {
         // if recall
         if (preText === text && prePosition && start.isEqual(prePosition)) { return; };
 
-        const outputUrls = await commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY);
+        // calculate replace range
+        const linesText = text.split("\n");
+        const delEndTextLen = linesText[linesText.length - 1].length;
+        const delLine = start.line + linesText.length -1;
+        const delCharacter = linesText.length > 1 ? delEndTextLen : start.character + delEndTextLen;
+        const editRange = new Range(start, new Position(delLine, delCharacter));
+
+        // call
+        const outputUrls = await commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY, editRange);
 
         if (!outputUrls.length) { return; };
-
-        const outputList = outputUrls.map((item) => `![](${item})`);
-        const linesText = text.split("\n");
-        
-        window.activeTextEditor?.edit((editBuilder) => {
-            const delEndTextLen = linesText[linesText.length - 1].length;
-            const delLine = start.line + linesText.length -1;
-            const delCharacter = linesText.length > 1 ? delEndTextLen : start.character + delEndTextLen;
-
-            editBuilder.delete(new Range(start, new Position(delLine, delCharacter)));
-            editBuilder.insert(start, outputList.join("\n"));
-        });
-
-        const preEndTextLen = outputList[outputList.length - 1].length;
-        const preLine = start.line + outputList.length - 1;
-        const preCharacter = outputList.length > 1 ? preEndTextLen : start.character + preEndTextLen;
+        // calculate recall position
+        const preEndTextLen = outputUrls[outputUrls.length - 1].length;
+        const preLine = start.line + outputUrls.length - 1;
+        const preCharacter = outputUrls.length > 1 ? preEndTextLen : start.character + preEndTextLen;
         prePosition = new Position(preLine, preCharacter);
-        preOutputText = outputList.join("\n");
+        preOutputText = outputUrls.join("\n");
         preText = text;
     };
     
