@@ -43,9 +43,16 @@ export function matchUrls(str: string) {
     return matchedUrls ? matchedUrls : [];
 }
 
-export function initPath() {
-    fs.access(IMAGE_DIR_PATH, fs.constants.F_OK, (err) => (err && fs.mkdirSync(IMAGE_DIR_PATH)));
-    fs.access(RECORD_FILE_PATH, fs.constants.F_OK, (err) => (err && fs.writeFileSync(RECORD_FILE_PATH, "[]")));
+export async function initPath() {
+    return new Promise((resolve) => {
+        fs.access(IMAGE_DIR_PATH, fs.constants.F_OK, (err) => {
+            err && fs.mkdirSync(IMAGE_DIR_PATH);
+            fs.access(RECORD_FILE_PATH, fs.constants.F_OK, (err) => {
+                err && fs.writeFileSync(RECORD_FILE_PATH, "[]");
+                resolve(null);
+            });
+        });
+    });
 }
 
 type RecordItem = {

@@ -1,6 +1,6 @@
 {
-  "name": "vscode-clipboard-img-uploader",
-  "displayName": "Clipboard img uploader",
+  "name": "vscode-img-quick",
+  "displayName": "Img Quick",
   "description": "Quickly uploads clipboard images in markdown.",
   "version": "0.0.1",
   "engines": {
@@ -11,18 +11,18 @@
   ],
   "activationEvents": [
     "onLanguage:markdown",
-    "onCommand:clipboard-img-uploader.upload",
-    "onCommand:clipboard-img-uploader.delete"
+    "onCommand:img-quick.upload",
+    "onCommand:img-quick.delete"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "clipboard-img-uploader.upload",
+        "command": "img-quick.upload",
         "title": "上传"
       },
       {
-        "command": "clipboard-img-uploader.delete",
+        "command": "img-quick.delete",
         "title": "删除"
       }
     ]

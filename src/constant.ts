@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 
-export const PLUGIN_NAME = "clipboard-img-uploader";
+export const PLUGIN_NAME = "img-quick";
 
 export const COMMAND_UPLOAD_KEY = `${PLUGIN_NAME}.upload`;
 

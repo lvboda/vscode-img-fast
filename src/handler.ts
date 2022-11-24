@@ -13,7 +13,7 @@ import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 
 export function createOnCommandUploadHandler() {
     async function handler(imagePaths?: string[], showTips = true) {
-        initPath();
+        await initPath();
 
         const inputImages = genImagesWith(imagePaths);
         const images = inputImages.length ? inputImages : await getClipboardImages();
