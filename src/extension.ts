@@ -1,8 +1,8 @@
 'use strict';
 import { commands, languages, workspace } from 'vscode';
 
-import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY } from './constant';
 import { getConfig } from './config';
+import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY } from './constant';
 import { createOnDidChangeTextDocumentHandler, createOnCommandUploadHandler, createOnCommandDeleteHandler, createOnMarkdownHoverHandler } from './handler';
 
 import type { ExtensionContext } from 'vscode';

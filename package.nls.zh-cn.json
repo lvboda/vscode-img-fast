@@ -1,0 +1,27 @@
+{
+    "package.commands.upload": "上传剪切板图片",
+    "package.commands.delete": "同步删除云端图片",
+    "package.configuration.title": "img-fast的配置项",
+    "package.configuration.openPasteAutoUpload": "是否开启粘贴图片自动上传功能（默认开启）",
+    "package.configuration.authorization": "请求头的Authorization值",
+    "package.configuration.imgRename": "图片上传前重命名（参考文档）",
+    "package.configuration.outputRename": "图片上传成功后自定义粘贴格式（参考文档）",
+    "package.configuration.uploadUrl": "上传接口",
+    "package.configuration.uploadMethod": "上传接口的请求方法",
+    "package.configuration.uploadFormDataKey": "上传接口formData的键",
+    "package.configuration.deleteUrl": "删除接口（如果为空则不开启同步删除功能）",
+    "package.configuration.deleteMethod": "删除接口的请求方法",
+    "package.configuration.deleteQueryKey": "删除接口query参数的键（如果为空则采用params方式传参）",
+    "package.configuration.deletedFlag": "删除接口调用成功后的操作（参考文档）",
+
+    "config.notNull": "不能为空，请检查您的配置",
+
+    "handler.uploading": "正在上传",
+    "handler.deleting": "正在删除",
+    "handler.syncDelete": "同步删除",
+    "handler.syncDeleteTips": "未查询到该图片的上传记录，可能会删除失败",
+
+    "hook.uploadStatusError": "<上传失败 响应状态码不正确>",
+    "hook.uploadNoMatchedUrl": "<上传失败 未在响应数据中匹配到url>",
+    "hook.deleteStatusError": "<删除失败 响应状态码不正确>"
+}

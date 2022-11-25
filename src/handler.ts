@@ -2,6 +2,7 @@
 import * as path from 'node:path';
 import { window, commands, Range, Position, Hover, Uri, MarkdownString } from 'vscode';
 
+import localize from './localize';
 import { readRecord } from './record';
 import { uploadImage, deleteImage } from './request';
 import { showStatusBar, hideStatusBar } from './tips';
@@ -23,7 +24,7 @@ export function createOnCommandUploadHandler() {
         const outputTexts: string[] = [];
 
         for (const image of images) {
-            showStatusBar(`正在上传${image.basename}...`);
+            showStatusBar(`${localize("handler.uploading")}${image.basename}...`);
             beforeUpload(image);
             const text = uploaded(await uploadImage(image), image);
             text.length && outputTexts.push(text);
@@ -63,7 +64,7 @@ export function createOnCommandDeleteHandler() {
                 for (const url of urls) {
                     const image = genImageWith(url);
                     if (!image) return;
-                    showStatusBar(`正在删除${image.basename}...`);
+                    showStatusBar(`${localize("handler.deleting")}${image.basename}...`);
                     res = await deleteImage(image.basename);
                     hideStatusBar();
                 }
@@ -80,7 +81,7 @@ export function createOnCommandDeleteHandler() {
 
         const image = genImageWith(url);
         if (!image) return;
-        showStatusBar(`正在删除${image.basename}...`);
+        showStatusBar(`${localize("handler.deleting")}${image.basename}...`);
         deleted(await deleteImage(image.basename), url, position);
         hideStatusBar();
     };
@@ -102,7 +103,7 @@ export function createOnMarkdownHoverHandler() {
             const hasRecord = readRecord().find((item) => item.image && item.image.url === matchedUrl);
 
             const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify([matchedUrl, position]))}`);
-            const contents = new MarkdownString(`[ ${PLUGIN_NAME} ] [同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
+            const contents = new MarkdownString(`[ ${PLUGIN_NAME} ] [${localize("handler.syncDelete")}](${commandUri})${!hasRecord ? ` (${localize("handler.syncDeleteTips")})` : ""}`);
             contents.isTrusted = true;
 
             return new Hover(contents);

@@ -3,6 +3,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { window, Range, Position } from 'vscode';
 
+import localize from './localize';
 import { getConfig } from './config';
 import { writeRecord } from './record';
 import { IMAGE_DIR_PATH } from './constant';
@@ -32,11 +33,11 @@ export function uploaded(res: AxiosResponse, image: Image) {
     writeRecord(res, image);
 
     if (res.status !== 200) {
-        throw genHttpError(res, "<upload request error: http status error>");
+        throw genHttpError(res, localize("hook.uploadStatusError"));
     }
 
     if (!matchedUrls.length) {
-        throw genHttpError(res, "<upload response error: no matched url>");
+        throw genHttpError(res, localize("hook.uploadNoMatchedUrl"));
     }
     return customFormat(outputRename, image);
 }
@@ -44,7 +45,7 @@ export function uploaded(res: AxiosResponse, image: Image) {
 export function deleted(res: AxiosResponse, url: string, position: Position, delRange?: Range) {
     writeRecord(res);
     if (res.status !== 200) {
-        throw genHttpError(res, "<delete request error: http status error>");
+        throw genHttpError(res, localize("hook.deleteStatusError"));
     }
 
     const editor = window.activeTextEditor?.edit;

@@ -3,7 +3,7 @@
   "displayName": "Img Fast",
   "description": "Quickly uploads clipboard images in markdown.",
   "version": "0.0.1",
-  "publisher": "lvboda",
+  "publisher": "Boda Lü",
   "author": {
     "name": "Boda Lü",
     "email": "lv_boda@163.com"
@@ -40,41 +40,41 @@
     "commands": [
       {
         "command": "img-fast.upload",
-        "title": "上传"
+        "title": "%package.commands.upload%"
       },
       {
         "command": "img-fast.delete",
-        "title": "删除"
+        "title": "%package.commands.delete%"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "Img Fast Configuration",
+      "title": "%package.configuration.title%",
       "properties": {
         "img-fast.openPasteAutoUpload": {
           "type": "boolean",
           "default": true,
-          "description": "Whether to enable automatic uploading of pasted images."
+          "description": "%package.configuration.openPasteAutoUpload%"
         },
         "img-fast.authorization": {
           "type": "string",
-          "default": "BD1010110",
-          "description": "Request authorization token."
+          "default": "Bearer your token...",
+          "description": "%package.configuration.authorization%"
         },
         "img-fast.imgRename": {
           "type": "string",
           "default": "${hash}-${yyyy}-${MM}-${dd}-${hh}-${mm}-${ss}-${timestamp}-${name}",
-          "description": "Request form data key."
+          "description": "%package.configuration.imgRename%"
         },
         "img-fast.outputRename": {
           "type": "string",
           "default": "![${name}](${url})",
-          "description": "Request form data key."
+          "description": "%package.configuration.outputRename%"
         },
         "img-fast.uploadUrl": {
           "type": "string",
-          "default": "http://localhost:8000/",
-          "description": "Request Upload api."
+          "default": "",
+          "description": "%package.configuration.uploadUrl%"
         },
         "img-fast.uploadMethod": {
           "type": "string",
@@ -82,15 +82,38 @@
             "GET",
             "POST",
             "PUT",
+            "PATCH",
             "DELETE"
           ],
           "default": "POST",
-          "description": "Upload request method."
+          "description": "%package.configuration.uploadMethod%"
         },
         "img-fast.uploadFormDataKey": {
           "type": "string",
-          "default": "img",
-          "description": "Request form data key."
+          "default": "file",
+          "description": "%package.configuration.uploadFormDataKey%"
+        },
+        "img-fast.deleteUrl": {
+          "type": "string",
+          "default": "",
+          "description": "%package.configuration.deleteUrl%"
+        },
+        "img-fast.deleteMethod": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ],
+          "default": "DELETE",
+          "description": "%package.configuration.deleteMethod%"
+        },
+        "img-fast.deleteQueryKey": {
+          "type": "string",
+          "default": "",
+          "description": "%package.configuration.deleteQueryKey%"
         },
         "img-fast.deletedFlag": {
           "type": "string",
@@ -100,28 +123,7 @@
             "layout"
           ],
           "default": "layout",
-          "description": "deleted flag."
-        },
-        "img-fast.deleteUrl": {
-          "type": "string",
-          "default": "http://localhost:8000/",
-          "description": "Request delete api."
-        },
-        "img-fast.deleteMethod": {
-          "type": "string",
-          "enum": [
-            "GET",
-            "POST",
-            "PUT",
-            "DELETE"
-          ],
-          "default": "DELETE",
-          "description": "Delete request method."
-        },
-        "img-fast.deleteQueryKey": {
-          "type": "string",
-          "default": "",
-          "description": "Delete request query key."
+          "description": "%package.configuration.deletedFlag%"
         }
       }
     }
