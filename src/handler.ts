@@ -19,7 +19,7 @@ export function createOnCommandUploadHandler() {
         await initPath();
 
         const images = await getClipboardImages();
-        if (!images.length) { return []; }
+        if (!images.length) return [];
         const outputTexts: string[] = [];
         
         for (const image of images) {
@@ -53,7 +53,7 @@ export function createOnCommandDeleteHandler() {
         if (!url || !position) {
             const selection = window.activeTextEditor?.selection;
             const document = window.activeTextEditor?.document;
-            if (!selection || !document) { return; }
+            if (!selection || !document) return;
 
             // if selected
             if (!selection.start.isEqual(selection.end)) {
@@ -62,7 +62,7 @@ export function createOnCommandDeleteHandler() {
                 let res;
                 for (const url of urls) {
                     const image = genImageWith(url);
-                    if (!image) { return; };
+                    if (!image) return;
                     showStatusBar(`正在删除${image.basename}...`);
                     res = await deleteImage(image.basename);
                     hideStatusBar();
@@ -73,13 +73,13 @@ export function createOnCommandDeleteHandler() {
 
             const text = document.lineAt(selection.start.line).text;
             const urls = matchUrls(text);
-            if (!urls.length) { return; }
+            if (!urls.length) return;
             url = urls[0];
             position = new Position(selection.start.line, NaN);;
         }
 
         const image = genImageWith(url);
-        if (!image) { return; };
+        if (!image) return;
         showStatusBar(`正在删除${image.basename}...`);
         deleted(await deleteImage(image.basename), url, position);
         hideStatusBar();
@@ -120,9 +120,9 @@ export function createOnDidChangeTextDocumentHandler() {
         const { text, range: { start } } = getEventOpts(event);
 
         // if not paste image
-        if (!isImage(text) || preOutputText === text) { return; };
+        if (!isImage(text) || preOutputText === text) return;
         // if recall
-        if (preText === text && prePosition && start.isEqual(prePosition)) { return; };
+        if (preText === text && prePosition && start.isEqual(prePosition)) return;
 
         // calculate replace range
         const linesText = text.split("\n");
@@ -134,7 +134,7 @@ export function createOnDidChangeTextDocumentHandler() {
         // call
         const outputUrls = await commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY, editRange);
 
-        if (!outputUrls.length) { return; };
+        if (!outputUrls.length) return;
         // calculate recall position
         const preEndTextLen = outputUrls[outputUrls.length - 1].length;
         const preLine = start.line + outputUrls.length - 1;

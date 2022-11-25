@@ -49,7 +49,7 @@ export function deleted(res: AxiosResponse, url: string, position: Position, del
 
     const editor = window.activeTextEditor?.edit;
     const document = window.activeTextEditor?.document;
-    if (!editor || !document) { return; }
+    if (!editor || !document) return;
 
     editor((editBuilder) => {
         if (delRange) {

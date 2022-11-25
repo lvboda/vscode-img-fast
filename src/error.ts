@@ -6,7 +6,9 @@ export function invokeWithErrorHandler<T extends (...args: any[]) => any>(cb: T)
         let res;
         try {
             res = await cb(...args);
-        } catch(err) { panic(err); };
+        } catch(err) {
+            panic(err);
+        }
         return res;
     };
 }
@@ -16,7 +18,9 @@ export function invokeWithErrorHandlerSync<T extends (...args: any[]) => any>(cb
         let res;
         try {
             res = cb(...args);
-        } catch(err) { panic(err); };
+        } catch(err) {
+            panic(err);
+        }
         return res;
     };
 }

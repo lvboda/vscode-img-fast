@@ -56,13 +56,13 @@ export function genImage(
 }
 
 export function genImageWith(filePath?: string) {
-    if (!filePath || !filePath.length) { return null; };
+    if (!filePath || !filePath.length) return;
 
     const imgBasename = path.basename(filePath);
     const ext = path.extname(filePath);
     const imgName = imgBasename.replace(ext, "");
     const imgFormat = ext.replace(".", "");
-    if (!imgBasename || !imgFormat || !checkFormat(imgFormat)) { return null; };
+    if (!imgBasename || !imgFormat || !checkFormat(imgFormat)) return;
 
     return genImage(imgBasename, imgName, toFormat(imgFormat), filePath, getFileHash(filePath));
 }
@@ -88,9 +88,7 @@ export async function getClipboardImages() {
     const resolvedImages = genImagesWith(readFilePaths());
 
     // no image
-    if (!hasImage() && !resolvedImages.length) {
-        return [];
-    }
+    if (!hasImage() && !resolvedImages.length) return [];
 
     // is screenshot
     if (hasImage() && !resolvedImages.length) {

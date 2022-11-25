@@ -5,7 +5,6 @@ import { Axios } from 'axios';
 
 import { getConfig } from './config';
 
-import type { AxiosResponse } from 'axios';
 import type { Image } from './image';
 
 const { 

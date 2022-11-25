@@ -17,9 +17,7 @@ export function getFileHash(path: string) {
     const buffer = fs.readFileSync(path);
     return crypto.createHash("md5").update(buffer).digest("hex");
   } catch (err: any) {
-    if (err.code === "ENOENT") {
-      return "";
-    }
+    if (err.code === "ENOENT") return "";
     throw err;
   }
 }
@@ -76,9 +74,9 @@ export function dateFormat(fmt: string) {
 
 export function customFormat(fmt: string, image: Image) {
     return fmt.replace(/\$\{(.+?)\}/g, (_, p1) => {
-        if (p1 === "timestamp") { return new Date().getTime().toString(); }
+        if (p1 === "timestamp") return new Date().getTime().toString();
         const value = image[(p1 as keyof Image)];
-        if (value) { return value; };
+        if (value) return value;
         return dateFormat(p1);
     });
 }
