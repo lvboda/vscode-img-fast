@@ -3,7 +3,6 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { window, Range, Position } from 'vscode';
 
-import { genImage } from './image';
 import { getConfig } from './config';
 import { writeRecord } from './record';
 import { IMAGE_DIR_PATH } from './constant';

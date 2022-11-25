@@ -12,6 +12,7 @@
     "type": "git",
     "url": "https://github.com/lvboda/vscode-img-fast.git"
   },
+  "icon": "public/logo.png",
   "homepage": "https://github.com/lvboda/vscode-img-fast/blob/master/README.md",
   "bugs": {
     "url": "https://github.com/lvboda/vscode-img-fast/issues"
@@ -21,7 +22,6 @@
     "image",
     "paste",
     "upload",
-    "auto upload",
     "pic"
   ],
   "engines": {
