@@ -14,8 +14,7 @@
     "package.configuration.deleteQueryKey": "删除接口query参数的键（如果为空则采用params方式传参）",
     "package.configuration.deletedFlag": "删除接口调用成功后的操作（参考文档）",
 
-    "config.notNull": "不能为空，请检查您的配置",
-
+    "handler.notNull": "不能为空，请检查您的配置",
     "handler.uploading": "正在上传",
     "handler.deleting": "正在删除",
     "handler.syncDelete": "同步删除",

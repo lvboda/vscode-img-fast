@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 import { extensions } from "vscode";
 
 interface ILanguagePack {
@@ -41,7 +41,7 @@ export class Localize {
     const languageFormat = "package.nls{0}.json";
     const defaultLanguage = languageFormat.replace("{0}", "");
 
-    const rootPath = extensions.getExtension("lvboda.vscode-img-fast")?.extensionPath as string;
+    const rootPath = extensions.getExtension("Boda Lü.vscode-img-fast")?.extensionPath as string;
 
     const resolvedLanguage = this.recurseCandidates(
       rootPath,
@@ -49,17 +49,17 @@ export class Localize {
       this.options.locale
     );
 
-    const languageFilePath = resolve(rootPath, resolvedLanguage);
+    const languageFilePath = path.resolve(rootPath, resolvedLanguage);
 
     try {
       const defaultLanguageBundle = JSON.parse(
         resolvedLanguage !== defaultLanguage
-          ? readFileSync(resolve(rootPath, defaultLanguage), "utf-8")
+          ? fs.readFileSync(path.resolve(rootPath, defaultLanguage), "utf-8")
           : "{}"
       );
 
       const resolvedLanguageBundle = JSON.parse(
-        readFileSync(languageFilePath, "utf-8")
+        fs.readFileSync(languageFilePath, "utf-8")
       );
 
       return { ...defaultLanguageBundle, ...resolvedLanguageBundle };
@@ -74,8 +74,8 @@ export class Localize {
     candidate: string
   ): string {
     const filename = format.replace("{0}", `.${candidate}`);
-    const filepath = resolve(rootPath, filename);
-    if (existsSync(filepath)) {
+    const filepath = path.resolve(rootPath, filename);
+    if (fs.existsSync(filepath)) {
       return filename;
     }
     if (candidate.split("-")[0] !== candidate) {

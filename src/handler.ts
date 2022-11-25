@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { window, commands, Range, Position, Hover, Uri, MarkdownString } from 'vscode';
 
 import localize from './localize';
+import { getConfig } from './config';
 import { readRecord } from './record';
 import { uploadImage, deleteImage } from './request';
 import { showStatusBar, hideStatusBar } from './tips';
@@ -15,8 +16,12 @@ import { PLUGIN_NAME, COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } f
 import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 import type { AxiosResponse } from 'axios';
 
+const { openPasteAutoUpload, uploadUrl, deleteUrl } = getConfig();
+
 export function createOnCommandUploadHandler() {
     async function handler(editRange?: Range) {
+        if (!uploadUrl || !uploadUrl.length) throw Error(`uploadUrl ${localize("handler.notNull")}`);
+
         await initPath();
 
         const images = await getClipboardImages();
@@ -51,6 +56,8 @@ export function createOnCommandUploadHandler() {
 
 export function createOnCommandDeleteHandler() {
     async function handler(url?: string, position?: Position) {
+        if (!deleteUrl || !deleteUrl.length) throw Error(`deleteUrl ${localize("handler.notNull")}`);
+
         if (!url || !position) {
             const selection = window.activeTextEditor?.selection;
             const document = window.activeTextEditor?.document;
@@ -90,6 +97,8 @@ export function createOnCommandDeleteHandler() {
 }
 
 export function createOnMarkdownHoverHandler() {
+    if (!deleteUrl || !deleteUrl.length) return () => undefined;
+
     function handler(document: TextDocument, position: Position) {
         const lineText = document.lineAt(position.line).text;
         const matchedUrls = matchUrls(lineText).filter((url) => (!!path.extname(url) && isImage(url)) || !path.extname(url));
@@ -114,6 +123,8 @@ export function createOnMarkdownHoverHandler() {
 }
 
 export function createOnDidChangeTextDocumentHandler() {
+    if (!openPasteAutoUpload) return () => void 0;
+
     let preText = "";
     let preOutputText = "";
     let prePosition: Position;
