@@ -9,18 +9,19 @@ import type { Image } from './image';
 
 type Record = {
     time: string | Date;
-    image: Image;
     response: AxiosResponse;
+    image?: Image;
 };
 
 export function readRecord() {
     return JSON.parse(fs.readFileSync(RECORD_FILE_PATH, { encoding: "utf8" })) as Record[];
 }
 
-export function writeRecord(image: Image, response: AxiosResponse, maxStorageCount = 500) {
+export function writeRecord(response: AxiosResponse, image?: Image, maxStorageCount = 500) {
     delete response.request;
-    const records = readRecord().filter((item) => !isEqual(item.image, image));
+    let records = readRecord();
+    image && (records = records.filter((item) => (item.image && image && !isEqual(item.image, image))));
     records.length > maxStorageCount && records.shift();
-    records.push({ time: new Date(), image, response });
+    records.push({ time: new Date(), response, image });
     fs.writeFileSync(RECORD_FILE_PATH, JSON.stringify(records), { encoding: "utf8" });
 }

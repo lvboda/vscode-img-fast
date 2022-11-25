@@ -1,43 +1,42 @@
 'use strict';
 import * as fs from 'node:fs';
-
-import { Axios } from 'axios';
 import * as formData from 'form-data';
+import { Axios } from 'axios';
+
+import { getConfig } from './config';
 
 import type { AxiosResponse } from 'axios';
 import type { Image } from './image';
 
-const axios = new Axios({
-    headers: {
-        "Authorization": "BD1010110",
-    },
-});
+const { 
+    authorization,
+    uploadUrl,
+    uploadMethod,
+    uploadFormDataKey,
+    deleteUrl,
+    deleteMethod,
+    deleteQueryKey
+} = getConfig();
 
-function resolveRes(res: AxiosResponse<string>) {
-    const { status, statusText, data, config } = res;
-    if (status !== 200) {
-        throw Error(`http request error, url: ${config.url}, method: ${config.method}, status: ${status}, statusText: ${statusText}.`);
-    }
-    return data;
-}
+const axios = new Axios({ headers: { Authorization: authorization } });
 
 export async function uploadImage(image: Image) {
     const form = new formData();
-    form.append("img", fs.createReadStream(image.beforeUploadPath));
+    form.append(uploadFormDataKey, fs.createReadStream(image.beforeUploadPath));
 
     return await axios.request<string>({
-        url: "http://localhost:8000/",
-        method: "POST",
+        url: uploadUrl,
+        method: uploadMethod,
         headers: form.getHeaders(),
         data: form,
     });
 }
 
 export async function deleteImage(name: string) {
-    const res = await axios.request<string>({
-        url: `http://localhost:8000/${name}`,
-        method: "DELETE",
+    return await axios.request<string>({
+        url: deleteQueryKey.length
+            ? `${deleteUrl}?${deleteQueryKey}=${name}`
+            : `${deleteUrl}${name}`,
+        method: deleteMethod,
     });
-
-    return resolveRes(res);
 }

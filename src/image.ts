@@ -6,6 +6,7 @@ import { IMAGE_DIR_PATH } from './constant';
 import { getFileHash } from './utils';
 
 export type Image = {
+    basename: string;
     name: string;
     format: Format;
     path: string;
@@ -41,7 +42,8 @@ function checkFormat(ext: string): ext is Format {
     return flag;
 }
 
-function genImage(
+export function genImage(
+    basename: string,
     name: string,
     format: Format,
     path: string,
@@ -50,18 +52,19 @@ function genImage(
     beforeUploadName = "",
     url?: string
 ): Image {
-    return { name, format, path, hash, beforeUploadPath, beforeUploadName, url };
+    return { basename, name, format, path, hash, beforeUploadPath, beforeUploadName, url };
 }
 
 export function genImageWith(filePath?: string) {
     if (!filePath || !filePath.length) { return null; };
 
-    const imgName = path.basename(filePath);
+    const imgBasename = path.basename(filePath);
     const ext = path.extname(filePath);
+    const imgName = imgBasename.replace(ext, "");
     const imgFormat = ext.replace(".", "");
-    if (!imgName || !imgFormat || !checkFormat(imgFormat)) { return null; };
+    if (!imgBasename || !imgFormat || !checkFormat(imgFormat)) { return null; };
 
-    return genImage(imgName, toFormat(imgFormat), filePath, getFileHash(filePath));
+    return genImage(imgBasename, imgName, toFormat(imgFormat), filePath, getFileHash(filePath));
 }
 
 export function genImagesWith(filePaths?: string[]) {
@@ -93,7 +96,7 @@ export async function getClipboardImages() {
     if (hasImage() && !resolvedImages.length) {
         const tempPath = path.resolve(IMAGE_DIR_PATH, "screenshot.png");
         const ok = await saveImageAsPng(tempPath);
-        return ok ? [genImage("screenshot.png", Format.png, tempPath, getFileHash(tempPath))] : [];
+        return ok ? [genImage("screenshot.png", "screenshot", Format.png, tempPath, getFileHash(tempPath))] : [];
     }
 
     // is local images

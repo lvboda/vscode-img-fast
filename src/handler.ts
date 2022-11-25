@@ -3,25 +3,27 @@ import * as path from 'node:path';
 import { window, commands, Range, Position, Hover, Uri, MarkdownString } from 'vscode';
 
 import { readRecord } from './record';
-import { beforeUpload, uploaded } from './hook';
 import { uploadImage, deleteImage } from './request';
 import { showStatusBar, hideStatusBar } from './tips';
+import { beforeUpload, uploaded, deleted } from './hook';
 import { isImage, getClipboardImages, genImageWith } from './image';
 import { getEventOpts, matchUrls, initPath, emptyDir } from './utils';
 import { invokeWithErrorHandler, invokeWithErrorHandlerSync } from './error';
 import { PLUGIN_NAME, COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } from './constant';
 
 import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
+import type { AxiosResponse } from 'axios';
 
 export function createOnCommandUploadHandler() {
     async function handler(editRange?: Range) {
         await initPath();
 
         const images = await getClipboardImages();
+        if (!images.length) { return []; }
         const outputTexts: string[] = [];
         
         for (const image of images) {
-            showStatusBar(`正在上传${image.name}...`);
+            showStatusBar(`正在上传${image.basename}...`);
             beforeUpload(image);
             const text = uploaded(await uploadImage(image), image);
             text.length && outputTexts.push(text);
@@ -47,18 +49,40 @@ export function createOnCommandUploadHandler() {
 }
 
 export function createOnCommandDeleteHandler() {
-    async function handler(url: string, delPosition?: { line: number; startIndex: number; endIndex: number; }) {
+    async function handler(url?: string, position?: Position) {
+        if (!url || !position) {
+            const selection = window.activeTextEditor?.selection;
+            const document = window.activeTextEditor?.document;
+            if (!selection || !document) { return; }
+
+            // if selected
+            if (!selection.start.isEqual(selection.end)) {
+                const text = document.getText(selection);
+                const urls = matchUrls(text);
+                let res;
+                for (const url of urls) {
+                    const image = genImageWith(url);
+                    if (!image) { return; };
+                    showStatusBar(`正在删除${image.basename}...`);
+                    res = await deleteImage(image.basename);
+                    hideStatusBar();
+                }
+                deleted(res as AxiosResponse, "", new Position(NaN, NaN), selection);
+                return;
+            }
+
+            const text = document.lineAt(selection.start.line).text;
+            const urls = matchUrls(text);
+            if (!urls.length) { return; }
+            url = urls[0];
+            position = new Position(selection.start.line, NaN);;
+        }
+
         const image = genImageWith(url);
         if (!image) { return; };
-
-        showStatusBar(`正在删除${image.name}`);
-        const res = await deleteImage(image.name);
+        showStatusBar(`正在删除${image.basename}...`);
+        deleted(await deleteImage(image.basename), url, position);
         hideStatusBar();
-        if (!res) { return; };
-
-        if (!delPosition) { return; };
-        const { line, startIndex, endIndex } = delPosition;
-        window.activeTextEditor?.edit((editBuilder) => editBuilder.delete(new Range(new Position(line, startIndex), new Position(line, endIndex))));
     };
 
     return invokeWithErrorHandler(handler);
@@ -75,29 +99,9 @@ export function createOnMarkdownHoverHandler() {
             const urlEndIndex = lineText.indexOf(matchedUrl) + matchedUrl.length;
             if (!(position.character > urlStartIndex && position.character < urlEndIndex)) { continue; };
 
-            // find index: ![...](...)
-            let startIndex = lineText.lastIndexOf("![", position.character);
-            let endIndex = lineText.indexOf(")", position.character);
-
-            // find index: <img src="..."></img>
-            if (startIndex === -1 || endIndex === -1) {
-                startIndex = lineText.lastIndexOf("<", position.character);
-                endIndex = lineText.indexOf("/>", position.character);
-                endIndex === -1 && (endIndex = lineText.indexOf("img>", position.character));
-                endIndex === -1 && (endIndex = lineText.indexOf(">", position.character));
-            }
-
-            // find current url
-            if (startIndex === -1 || endIndex === -1) {
-                startIndex = lineText.indexOf(matchedUrl);
-                endIndex = startIndex + matchedUrl.length;
-            }
-
-            const hasRecord = readRecord().find((item) => (item.image.url === matchedUrl));
+            const hasRecord = readRecord().find((item) => item.image && item.image.url === matchedUrl);
     
-            const delPosition = { line: position.line, startIndex, endIndex: endIndex + 1 };
-            const commandArgs = [ matchedUrl, delPosition ];
-            const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify(commandArgs))}`);
+            const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify([ matchedUrl, position ]))}`);
             const contents = new MarkdownString(`[ ${PLUGIN_NAME} ] [同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
             contents.isTrusted = true;
 

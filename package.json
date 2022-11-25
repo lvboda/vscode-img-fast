@@ -3,6 +3,27 @@
   "displayName": "Img Fast",
   "description": "Quickly uploads clipboard images in markdown.",
   "version": "0.0.1",
+  "publisher": "lvboda",
+  "author": {
+    "name": "Boda Lü",
+    "email": "lv_boda@163.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lvboda/vscode-img-fast.git"
+  },
+  "homepage": "https://github.com/lvboda/vscode-img-fast/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/lvboda/vscode-img-fast/issues"
+  },
+  "keywords": [
+    "markdown",
+    "image",
+    "paste",
+    "upload",
+    "auto upload",
+    "pic"
+  ],
   "engines": {
     "vscode": "^1.73.0"
   },
@@ -25,7 +46,85 @@
         "command": "img-fast.delete",
         "title": "删除"
       }
-    ]
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Img Fast Configuration",
+      "properties": {
+        "img-fast.openPasteAutoUpload": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to enable automatic uploading of pasted images."
+        },
+        "img-fast.authorization": {
+          "type": "string",
+          "default": "BD1010110",
+          "description": "Request authorization token."
+        },
+        "img-fast.imgRename": {
+          "type": "string",
+          "default": "${hash}-${yyyy}-${MM}-${dd}-${hh}-${mm}-${ss}-${timestamp}-${name}",
+          "description": "Request form data key."
+        },
+        "img-fast.outputRename": {
+          "type": "string",
+          "default": "![${name}](${url})",
+          "description": "Request form data key."
+        },
+        "img-fast.uploadUrl": {
+          "type": "string",
+          "default": "http://localhost:8000/",
+          "description": "Request Upload api."
+        },
+        "img-fast.uploadMethod": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE"
+          ],
+          "default": "POST",
+          "description": "Upload request method."
+        },
+        "img-fast.uploadFormDataKey": {
+          "type": "string",
+          "default": "img",
+          "description": "Request form data key."
+        },
+        "img-fast.deletedFlag": {
+          "type": "string",
+          "enum": [
+            "none",
+            "url",
+            "layout"
+          ],
+          "default": "layout",
+          "description": "deleted flag."
+        },
+        "img-fast.deleteUrl": {
+          "type": "string",
+          "default": "http://localhost:8000/",
+          "description": "Request delete api."
+        },
+        "img-fast.deleteMethod": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "DELETE"
+          ],
+          "default": "DELETE",
+          "description": "Delete request method."
+        },
+        "img-fast.deleteQueryKey": {
+          "type": "string",
+          "default": "",
+          "description": "Delete request query key."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
