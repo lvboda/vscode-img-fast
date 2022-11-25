@@ -21,7 +21,7 @@ export function createOnCommandUploadHandler() {
         const images = await getClipboardImages();
         if (!images.length) return [];
         const outputTexts: string[] = [];
-        
+
         for (const image of images) {
             showStatusBar(`正在上传${image.basename}...`);
             beforeUpload(image);
@@ -100,8 +100,8 @@ export function createOnMarkdownHoverHandler() {
             if (!(position.character > urlStartIndex && position.character < urlEndIndex)) { continue; };
 
             const hasRecord = readRecord().find((item) => item.image && item.image.url === matchedUrl);
-    
-            const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify([ matchedUrl, position ]))}`);
+
+            const commandUri = Uri.parse(`command:${COMMAND_DELETE_KEY}?${encodeURIComponent(JSON.stringify([matchedUrl, position]))}`);
             const contents = new MarkdownString(`[ ${PLUGIN_NAME} ] [同步删除](${commandUri})${!hasRecord ? " (未查询到此图片上传记录 可能会删除失败)" : ""}`);
             contents.isTrusted = true;
 
@@ -127,7 +127,7 @@ export function createOnDidChangeTextDocumentHandler() {
         // calculate replace range
         const linesText = text.split("\n");
         const delEndTextLen = linesText[linesText.length - 1].length;
-        const delLine = start.line + linesText.length -1;
+        const delLine = start.line + linesText.length - 1;
         const delCharacter = linesText.length > 1 ? delEndTextLen : start.character + delEndTextLen;
         const editRange = new Range(start, new Position(delLine, delCharacter));
 
@@ -143,6 +143,6 @@ export function createOnDidChangeTextDocumentHandler() {
         preOutputText = outputUrls.join("\n");
         preText = text;
     };
-    
+
     return invokeWithErrorHandler(handler);
 }

@@ -7,7 +7,7 @@ import { getConfig } from './config';
 
 import type { Image } from './image';
 
-const { 
+const {
     authorization,
     uploadUrl,
     uploadMethod,

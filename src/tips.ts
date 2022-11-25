@@ -20,15 +20,15 @@ export function hideStatusBar() {
 }
 
 export function showMessage(type: "info" | "warn" | "error" = "info", message: string, ...args: string[]) {
-    switch(type) {
+    switch (type) {
         case "info":
             window.showInformationMessage(genMessage(message), ...args);
-        break;
+            break;
         case "warn":
             window.showWarningMessage(genMessage(message), ...args);
-        break;
+            break;
         case "error":
             window.showErrorMessage(genMessage(message), ...args);
-        break;
+            break;
     }
 }

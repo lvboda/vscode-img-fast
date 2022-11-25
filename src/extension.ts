@@ -12,11 +12,11 @@ export function activate(context: ExtensionContext) {
 
 	context.subscriptions.push(commands.registerCommand(COMMAND_UPLOAD_KEY, createOnCommandUploadHandler()));
 
-	context.subscriptions.push(commands.registerCommand(COMMAND_DELETE_KEY, createOnCommandDeleteHandler()));
+	deleteUrl.length && context.subscriptions.push(commands.registerCommand(COMMAND_DELETE_KEY, createOnCommandDeleteHandler()));
 
 	deleteUrl.length && context.subscriptions.push(languages.registerHoverProvider('markdown', { provideHover: createOnMarkdownHoverHandler() }));
 
 	openPasteAutoUpload && workspace.onDidChangeTextDocument(createOnDidChangeTextDocumentHandler());
 }
 
-export function deactivate() {}
+export function deactivate() { }

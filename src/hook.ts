@@ -73,7 +73,8 @@ export function deleted(res: AxiosResponse, url: string, position: Position, del
                     .map((item) => ({ start: lineText.indexOf(item), end: lineText.indexOf(item) + item.length }))
                     .filter((item) => (position.character && item.start < position.character && item.end > position.character) || !position.character);
 
-                editBuilder.delete(new Range(new Position(position.line, resolved[0].start ), new Position(position.line, resolved[0].end)));
+                editBuilder.delete(new Range(new Position(position.line, resolved[0].start), new Position(position.line, resolved[0].end)));
+                break;
             default:
                 // none;
                 break;
