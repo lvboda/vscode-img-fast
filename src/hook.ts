@@ -16,7 +16,7 @@ const { imgRename, outputRename, deletedFlag } = getConfig();
 
 function genHttpError(res: AxiosResponse, title: string) {
     const { status, statusText, data, config } = res;
-    return new Error(`${title} url: ${config.url}, method: ${config.method}, status: ${status}, statusText: ${statusText}, response: ${data}.`);
+    return Error(`${title} url: ${config.url}, method: ${config.method}, status: ${status}, statusText: ${statusText}, response: ${data}.`);
 }
 
 export function beforeUpload(image: Image) {
@@ -32,21 +32,17 @@ export function uploaded(res: AxiosResponse, image: Image) {
     image.url = matchedUrls[0];
     writeRecord(res, image);
 
-    if (res.status !== 200) {
-        throw genHttpError(res, localize("hook.uploadStatusError"));
-    }
+    if (res.status !== 200) throw genHttpError(res, localize("hook.uploadStatusError"));
 
-    if (!matchedUrls.length) {
-        throw genHttpError(res, localize("hook.uploadNoMatchedUrl"));
-    }
+    if (!matchedUrls.length) throw genHttpError(res, localize("hook.uploadNoMatchedUrl"));
+
     return customFormat(outputRename, image);
 }
 
 export function deleted(res: AxiosResponse, url: string, position: Position, delRange?: Range) {
     writeRecord(res);
-    if (res.status !== 200) {
-        throw genHttpError(res, localize("hook.deleteStatusError"));
-    }
+    
+    if (res.status !== 200) throw genHttpError(res, localize("hook.deleteStatusError"));
 
     const editor = window.activeTextEditor?.edit;
     const document = window.activeTextEditor?.document;

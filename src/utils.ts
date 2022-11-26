@@ -36,9 +36,7 @@ export function emptyDir(path: string) {
 }
 
 export function matchUrls(str: string) {
-    const matchedUrls = str.match(
-        /(https?|http|ftp):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g
-    ) as string[];
+    const matchedUrls = str.match(/(https?|http|ftp):\/\/[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]/g);
     return matchedUrls ? matchedUrls : [];
 }
 
@@ -76,9 +74,9 @@ export function dateFormat(fmt: string) {
 
 export function customFormat(fmt: string, image: Image) {
     return fmt.replace(/\$\{(.+?)\}/g, (_, p1) => {
-        if (p1 === "timestamp") return new Date().getTime().toString();
         const value = image[p1 as keyof Image];
         if (value) return value;
+        if (p1 === "timestamp") return new Date().getTime().toString();
         return dateFormat(p1);
     });
 }

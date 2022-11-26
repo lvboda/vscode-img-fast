@@ -97,7 +97,7 @@ export function createOnCommandDeleteHandler() {
 }
 
 export function createOnMarkdownHoverHandler() {
-    if (!deleteUrl || !deleteUrl.length) return () => undefined;
+    if (!deleteUrl || !deleteUrl.length) return () => void 0;
 
     function handler(document: TextDocument, position: Position) {
         const lineText = document.lineAt(position.line).text;
@@ -107,7 +107,7 @@ export function createOnMarkdownHoverHandler() {
             // exclude cursor not on link
             const urlStartIndex = lineText.indexOf(matchedUrl) - 1;
             const urlEndIndex = lineText.indexOf(matchedUrl) + matchedUrl.length;
-            if (!(position.character > urlStartIndex && position.character < urlEndIndex)) { continue; };
+            if (!(position.character > urlStartIndex && position.character < urlEndIndex)) continue;
 
             const hasRecord = readRecord().find((item) => item.image && item.image.url === matchedUrl);
 

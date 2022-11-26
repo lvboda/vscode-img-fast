@@ -94,7 +94,7 @@ export async function getClipboardImages() {
     if (hasImage() && !resolvedImages.length) {
         const tempPath = path.resolve(IMAGE_DIR_PATH, "screenshot.png");
         const ok = await saveImageAsPng(tempPath);
-        return ok ? [genImage("screenshot.png", "screenshot", Format.png, tempPath, getFileHash(tempPath))] : [];
+        return ok ? [ genImage("screenshot.png", "screenshot", Format.png, tempPath, getFileHash(tempPath)) ] : [];
     }
 
     // is local images
