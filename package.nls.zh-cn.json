@@ -9,6 +9,7 @@
     "package.configuration.uploadUrl": "上传接口",
     "package.configuration.uploadMethod": "上传接口的请求方法",
     "package.configuration.uploadFormDataKey": "上传接口formData的键",
+    "package.configuration.uploadedKey": "上传接口响应体图片url的键（为空则匹配第一个url）",
     "package.configuration.deleteUrl": "删除接口（如果为空则不开启同步删除功能）",
     "package.configuration.deleteMethod": "删除接口的请求方法",
     "package.configuration.deleteQueryKey": "删除接口query参数的键（如果为空则采用params方式传参）",

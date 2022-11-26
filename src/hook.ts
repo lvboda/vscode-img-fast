@@ -26,15 +26,17 @@ export function beforeUpload(image: Image) {
 }
 
 export function uploaded(res: AxiosResponse, image: Image) {
-    const matchedUrls = matchUrls(res.data);
-    image.url = matchedUrls[0];
+    const { uploadedKey, outputRename } = getConfig();
+    
+    image.url = uploadedKey && JSON.parse(res.data)[uploadedKey];
+    !image.url && (image.url = matchUrls(res.data.replace(/\\/g, ""))[0]);
     writeRecord(res, image);
 
     if (res.status !== 200) throw genHttpError(res, localize("hook.uploadStatusError"));
 
-    if (!matchedUrls.length) throw genHttpError(res, localize("hook.uploadNoMatchedUrl"));
+    if (!image.url) throw genHttpError(res, localize("hook.uploadNoMatchedUrl"));
 
-    return customFormat(getConfig().outputRename, image);
+    return customFormat(outputRename, image);
 }
 
 export function deleted(res: AxiosResponse, url: string, position: Position, delRange?: Range) {

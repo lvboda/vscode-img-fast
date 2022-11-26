@@ -9,10 +9,11 @@
     "package.configuration.uploadUrl": "upload api",
     "package.configuration.uploadMethod": "upload request method",
     "package.configuration.uploadFormDataKey": "'formData' key",
+    "package.configuration.uploadedKey": "key of the image url of the response body of the upload (if it is empty, it matches the first url)",
     "package.configuration.deleteUrl": "delete api (Disable synchronous deletion if the value is empty)",
     "package.configuration.deleteMethod": "delete request method",
     "package.configuration.deleteQueryKey": "the key of the delete api query parameter (params if null)",
-    "package.configuration.deletedFlag": "Operations after a successful delete api call (refer to documentation)",
+    "package.configuration.deletedFlag": "operations after a successful delete api call (refer to documentation)",
 
     "error.feedback": "feedback",
     "error.close": "close",

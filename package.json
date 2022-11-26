@@ -93,6 +93,11 @@
           "default": "file",
           "description": "%package.configuration.uploadFormDataKey%"
         },
+        "img-fast.uploadedKey": {
+          "type": "string",
+          "default": "",
+          "description": "%package.configuration.uploadedKey%"
+        },
         "img-fast.deleteUrl": {
           "type": "string",
           "default": "",

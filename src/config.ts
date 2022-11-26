@@ -12,6 +12,7 @@ const defaultConfig = {
     uploadUrl: "",
     uploadMethod: "",
     uploadFormDataKey: "",
+    uploadedKey: "",
     deleteUrl: "",
     deleteMethod: "",
     deleteQueryKey: "",
