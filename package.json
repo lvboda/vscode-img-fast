@@ -2,22 +2,24 @@
   "name": "vscode-img-fast",
   "displayName": "Img Fast",
   "description": "Quickly uploads clipboard images in markdown.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "publisher": "Boda Lü",
   "author": {
     "name": "Boda Lü",
+    "url": "https://lvboda.cn",
     "email": "lv_boda@163.com"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/lvboda/vscode-img-fast.git"
   },
-  "icon": "public/logo.png",
+  "icon": "images/logo.png",
   "homepage": "https://github.com/lvboda/vscode-img-fast/blob/master/README.md",
   "bugs": {
     "url": "https://github.com/lvboda/vscode-img-fast/issues"
   },
   "keywords": [
+    "img-fast",
     "markdown",
     "image",
     "paste",
@@ -31,9 +33,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:markdown",
-    "onCommand:img-fast.upload",
-    "onCommand:img-fast.delete"
+    "*"
   ],
   "main": "./out/extension.js",
   "contributes": {

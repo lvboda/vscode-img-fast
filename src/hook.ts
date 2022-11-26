@@ -12,15 +12,13 @@ import { matchUrls, customFormat } from './utils';
 import type { AxiosResponse } from 'axios';
 import type { Image } from './image';
 
-const { imgRename, outputRename, deletedFlag } = getConfig();
-
 function genHttpError(res: AxiosResponse, title: string) {
     const { status, statusText, data, config } = res;
     return Error(`${title} url: ${config.url}, method: ${config.method}, status: ${status}, statusText: ${statusText}, response: ${data}.`);
 }
 
 export function beforeUpload(image: Image) {
-    const beforeUploadName = customFormat(imgRename, image);
+    const beforeUploadName = customFormat(getConfig().imgRename, image);
     const beforeUploadPath = path.resolve(IMAGE_DIR_PATH, `${beforeUploadName}.${image.format}`);
     fs.copyFileSync(image.path, beforeUploadPath);
     image.beforeUploadName = beforeUploadName;
@@ -36,7 +34,7 @@ export function uploaded(res: AxiosResponse, image: Image) {
 
     if (!matchedUrls.length) throw genHttpError(res, localize("hook.uploadNoMatchedUrl"));
 
-    return customFormat(outputRename, image);
+    return customFormat(getConfig().outputRename, image);
 }
 
 export function deleted(res: AxiosResponse, url: string, position: Position, delRange?: Range) {
@@ -55,7 +53,7 @@ export function deleted(res: AxiosResponse, url: string, position: Position, del
         }
 
         const lineText = document.lineAt(position.line).text;
-        switch (deletedFlag) {
+        switch (getConfig().deletedFlag) {
             case "url":
                 const start = lineText.indexOf(url);
                 editBuilder.delete(new Range(new Position(position.line, start), new Position(position.line, start + url.length)));

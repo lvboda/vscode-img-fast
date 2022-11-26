@@ -14,6 +14,9 @@
     "package.configuration.deleteQueryKey": "the key of the delete api query parameter (params if null)",
     "package.configuration.deletedFlag": "Operations after a successful delete api call (refer to documentation)",
 
+    "error.feedback": "feedback",
+    "error.close": "close",
+
     "handler.notNull": "cannot be empty, please check your configuration",
     "handler.uploading": "uploading",
     "handler.deleting": "deleting",

@@ -16,11 +16,9 @@ import { PLUGIN_NAME, COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY, IMAGE_DIR_PATH } f
 import type { TextDocument, TextDocumentChangeEvent } from 'vscode';
 import type { AxiosResponse } from 'axios';
 
-const { openPasteAutoUpload, uploadUrl, deleteUrl } = getConfig();
-
 export function createOnCommandUploadHandler() {
     async function handler(editRange?: Range) {
-        if (!uploadUrl || !uploadUrl.length) throw Error(`uploadUrl ${localize("handler.notNull")}`);
+        if (!getConfig().uploadUrl) throw Error(`uploadUrl ${localize("handler.notNull")}`);
 
         await initPath();
 
@@ -56,7 +54,7 @@ export function createOnCommandUploadHandler() {
 
 export function createOnCommandDeleteHandler() {
     async function handler(url?: string, position?: Position) {
-        if (!deleteUrl || !deleteUrl.length) throw Error(`deleteUrl ${localize("handler.notNull")}`);
+        if (!getConfig().deleteUrl) throw Error(`deleteUrl ${localize("handler.notNull")}`);
 
         if (!url || !position) {
             const selection = window.activeTextEditor?.selection;
@@ -97,7 +95,7 @@ export function createOnCommandDeleteHandler() {
 }
 
 export function createOnMarkdownHoverHandler() {
-    if (!deleteUrl || !deleteUrl.length) return () => void 0;
+    if (!getConfig().deleteUrl) return () => void 0;
 
     function handler(document: TextDocument, position: Position) {
         const lineText = document.lineAt(position.line).text;
@@ -123,7 +121,7 @@ export function createOnMarkdownHoverHandler() {
 }
 
 export function createOnDidChangeTextDocumentHandler() {
-    if (!openPasteAutoUpload) return () => void 0;
+    if (!getConfig().openPasteAutoUpload) return () => void 0;
 
     let preText = "";
     let preOutputText = "";

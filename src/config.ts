@@ -18,8 +18,6 @@ const defaultConfig = {
     deletedFlag: "layout",
 };
 
-let config: typeof defaultConfig | null = null;
-
 function genConfig(config: WorkspaceConfiguration) {
     return Object.entries(defaultConfig).reduce((pre, [key]) => {
         return { ...pre, [key]: config.get(key) };
@@ -27,6 +25,5 @@ function genConfig(config: WorkspaceConfiguration) {
 }
 
 export function getConfig() {
-    if (!config) config = genConfig(workspace.getConfiguration(PLUGIN_NAME));
-    return config;
+    return genConfig(workspace.getConfiguration(PLUGIN_NAME));
 }

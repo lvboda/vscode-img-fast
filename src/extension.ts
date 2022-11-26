@@ -10,10 +10,9 @@ export function activate(context: ExtensionContext) {
 	context.subscriptions.push(
 		commands.registerCommand(COMMAND_UPLOAD_KEY, createOnCommandUploadHandler()),
 		commands.registerCommand(COMMAND_DELETE_KEY, createOnCommandDeleteHandler()),
-		languages.registerHoverProvider('markdown', { provideHover: createOnMarkdownHoverHandler() }),
+		languages.registerHoverProvider("*", { provideHover: createOnMarkdownHoverHandler() }),
+		workspace.onDidChangeTextDocument(createOnDidChangeTextDocumentHandler()),
 	);
-
-	workspace.onDidChangeTextDocument(createOnDidChangeTextDocumentHandler());
 }
 
 export function deactivate() { }
