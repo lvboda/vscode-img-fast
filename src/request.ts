@@ -32,10 +32,16 @@ export async function uploadImage(image: Image) {
 }
 
 export async function deleteImage(name: string) {
+    let url = deleteUrl.endsWith("/") ? `${deleteUrl}${name}` : `${deleteUrl}/${name}`;
+    if (deleteQueryKey) {
+        const [ baseUrl, args ] = deleteUrl.split("?");
+        const params = new URLSearchParams(args);
+        params.append(deleteQueryKey, name);
+        url = `${baseUrl}?${params.toString()}`;
+    }
+    
     return await axios.request<string>({
-        url: deleteQueryKey.length
-            ? `${deleteUrl}?${deleteQueryKey}=${name}`
-            : `${deleteUrl}${name}`,
+        url,
         method: deleteMethod,
     });
 }
