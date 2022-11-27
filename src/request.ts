@@ -14,7 +14,7 @@ export async function uploadImage(image: Image) {
 
     const form = new formData();
     form.append(uploadFormDataKey, fs.createReadStream(image.beforeUploadPath));
-    
+
     return await axios.request<string>({
         url: uploadUrl,
         method: uploadMethod,

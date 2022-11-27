@@ -27,8 +27,8 @@ export function beforeUpload(image: Image) {
 
 export function uploaded(res: AxiosResponse, image: Image) {
     const { uploadedKey, outputRename } = getConfig();
-    
-    image.url = uploadedKey && JSON.parse(res.data)[uploadedKey];
+
+    image.url = uploadedKey && JSON.parse(res.data) && JSON.parse(res.data)[uploadedKey];
     !image.url && (image.url = matchUrls(res.data.replace(/\\/g, ""))[0]);
     writeRecord(res, image);
 
