@@ -94,8 +94,9 @@ export function createOnCommandDeleteHandler() {
     return invokeWithErrorHandler(handler);
 }
 
-export function createOnMarkdownHoverHandler() {
-    if (!getConfig().deleteUrl) return () => void 0;
+export function createOnHoverHandler() {
+    const { openDeleteHover, deleteUrl } = getConfig();
+    if (!openDeleteHover && !deleteUrl) return () => void 0;
 
     function handler(document: TextDocument, position: Position) {
         const lineText = document.lineAt(position.line).text;

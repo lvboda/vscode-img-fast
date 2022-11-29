@@ -3,6 +3,7 @@
     "package.commands.delete": "delete the cloud image synchronously",
     "package.configuration.title": "img-fast configuration",
     "package.configuration.openPasteAutoUpload": "whether to enable automatic uploading of pasted pictures (enabled by default)",
+    "package.configuration.openDeleteHover": "Whether to enable the deletion hover window (enabled by default)",
     "package.configuration.authorization": "'Authorization' of the request header",
     "package.configuration.imgRename": "rename image before uploading (refer to documentation)",
     "package.configuration.outputRename": "customize the paste format after the picture is uploaded (refer to the document)",

@@ -3,6 +3,7 @@
     "package.commands.delete": "同步删除云端图片",
     "package.configuration.title": "img-fast的配置项",
     "package.configuration.openPasteAutoUpload": "是否开启粘贴图片自动上传功能（默认开启）",
+    "package.configuration.openDeleteHover": "是否开启删除悬浮窗口（默认开启）",
     "package.configuration.authorization": "请求头的Authorization值",
     "package.configuration.imgRename": "图片上传前重命名（参考文档）",
     "package.configuration.outputRename": "图片上传成功后自定义粘贴格式（参考文档）",

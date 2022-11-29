@@ -56,6 +56,11 @@
           "default": true,
           "description": "%package.configuration.openPasteAutoUpload%"
         },
+        "img-fast.openDeleteHover": {
+          "type": "boolean",
+          "default": true,
+          "description": "%package.configuration.openDeleteHover%"
+        },
         "img-fast.authorization": {
           "type": "string",
           "default": "Bearer your token...",

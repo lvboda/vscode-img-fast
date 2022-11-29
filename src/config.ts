@@ -6,6 +6,7 @@ import type { WorkspaceConfiguration } from "vscode";
 
 const defaultConfig = {
     openPasteAutoUpload: true,
+    openDeleteHover: true,
     authorization: "",
     imgRename: "",
     outputRename: "",
