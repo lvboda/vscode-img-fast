@@ -1,7 +1,7 @@
 {
   "name": "vscode-img-fast",
   "displayName": "Img Fast",
-  "description": "Quickly uploads clipboard images in markdown.",
+  "description": "A vscode plugin that can quickly upload clipboard images and get image URL.",
   "version": "1.0.0",
   "publisher": "Boda Lü",
   "author": {
@@ -20,10 +20,12 @@
   },
   "keywords": [
     "img-fast",
-    "markdown",
+    "figure bed",
     "image",
     "paste",
     "upload",
+    "markdown",
+    ".md",
     "pic"
   ],
   "engines": {
@@ -63,7 +65,7 @@
         },
         "img-fast.authorization": {
           "type": "string",
-          "default": "Bearer your token...",
+          "default": "your token...",
           "description": "%package.configuration.authorization%"
         },
         "img-fast.imgRename": {
