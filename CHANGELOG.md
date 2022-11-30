@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.2 (2022-12-01)
+
+### Bug Fixes
+
+- Fix node_modules not found error. ([b33625f](https://github.com/lvboda/vscode-img-fast/commit/b33625f2988905aa4ddb127e5ae0d7a861f87376))
+
 ## 1.0.1 (2022-12-01)
 
 ### Bug Fixes
