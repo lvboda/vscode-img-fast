@@ -2,6 +2,8 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 import { extensions } from "vscode";
 
+import { PLUGIN_PUBLISHER, PLUGIN_FULL_NAME } from './constant';
+
 export class Localize {
     private bundle = this.resolveLanguagePack();
     private options = { locale: "" };
@@ -37,7 +39,7 @@ export class Localize {
         const languageFormat = "package.nls{0}.json";
         const defaultLanguage = languageFormat.replace("{0}", "");
 
-        const rootPath = extensions.getExtension("Boda Lü.vscode-img-fast")?.extensionPath as string;
+        const rootPath = extensions.getExtension(`${PLUGIN_PUBLISHER}.${PLUGIN_FULL_NAME}`)?.extensionPath as string;
 
         const resolvedLanguage = this.recurseCandidates(
             rootPath,

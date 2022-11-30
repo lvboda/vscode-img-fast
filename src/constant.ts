@@ -1,6 +1,10 @@
 'use strict';
 import * as path from 'node:path';
 
+export const PLUGIN_PUBLISHER = "lvboda";
+
+export const PLUGIN_FULL_NAME = "vscode-img-fast";
+
 export const PLUGIN_NAME = "img-fast";
 
 export const COMMAND_UPLOAD_KEY = `${PLUGIN_NAME}.upload`;
