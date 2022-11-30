@@ -111,23 +111,17 @@ Search for `Img Fast` in the vscode extension marketplace and click install, or 
 
 By default, this plugin enables the automatic uploading of paste images and clicking on the link suspended in the URL for deletion. It's core function is to call `img-fast.upload` and `img-fast.delete` these two commands, so you can complete the function with the form of custom shortcut key call command.
 
-Click `Code -> Preferences -> Keyboard Shortcuts -> Open Keyboard Shortcuts (json)` or use the shortcut `ctrl + shift + p -> type keyboard` to enter keybindings.json file, add the following configuration to the array of json files:
+Click `Code -> Preferences -> Keyboard Shortcuts -> Open Keyboard Shortcuts (json)` or use the shortcut `ctrl + shift + p -> type keyboard` to enter keybindings.json file, add the following configuration to the array of json files, replace `key` with the shortcut key you want to set.
 
 ```json
 {
-    // your keybindings
     "key": "ctrl+alt+p",
-    // upload command
     "command": "img-fast.upload",
-    // when expression
     "when": "editorTextFocus",
 },
 {
-    // your keybindings
     "key": "ctrl+alt+d",
-    // delete command
     "command": "img-fast.delete",
-    // when expression
     "when": "editorTextFocus",
 }
 ```
