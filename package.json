@@ -2,7 +2,7 @@
   "name": "vscode-img-fast",
   "displayName": "Img Fast",
   "description": "A vscode plugin that can quickly upload clipboard images and get image URL.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "lvboda",
   "author": {
     "name": "Boda Lü",
