@@ -105,3 +105,4 @@ dist
 
 out/
 *.vsix
+token.txt
