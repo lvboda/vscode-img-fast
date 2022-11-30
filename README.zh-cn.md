@@ -111,23 +111,17 @@
 
 本插件默认开启粘贴图片自动上传和点击悬浮在 URL 上的链接进行删除。其核心功能都是调用 `img-fast.upload` 和 `img-fast.delete` 这两个命令，所以完全可以用自定义快捷键调用命令的形式完成。
 
-点击`文件 -> 首选项 -> 键盘快捷方式 -> 打开键盘快捷方式(json)` 或使用快捷键 `ctrl + shift + p -> 输入Keyboard` 进入 keybindings.json 文件中，在 json 文件的数组中添加以下配置：
+点击`文件 -> 首选项 -> 键盘快捷方式 -> 打开键盘快捷方式(json)` 或使用快捷键 `ctrl + shift + p -> 输入Keyboard` 进入 keybindings.json 文件中，在 json 文件的数组中添加以下配置，`key` 替换为你想设置的快捷键。
 
 ```json
 {
-    // 设置为您想定义的按键
     "key": "ctrl+alt+p",
-    // 上传命令
     "command": "img-fast.upload",
-    // when表达式，直接粘贴即可，如有特殊需求请参考官方文档
     "when": "editorTextFocus",
 },
 {
-    // 设置为您想定义的按键
     "key": "ctrl+alt+d",
-    // 删除命令
     "command": "img-fast.delete",
-    // when表达式，直接粘贴即可，如有特殊需求请参考官方文档
     "when": "editorTextFocus",
 }
 ```
