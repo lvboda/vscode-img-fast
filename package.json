@@ -1,0 +1,173 @@
+{
+  "name": "vscode-img-fast",
+  "displayName": "Img Fast",
+  "description": "A vscode plugin that can quickly upload clipboard images and get image URL.",
+  "version": "1.0.0",
+  "publisher": "Boda Lü",
+  "author": {
+    "name": "Boda Lü",
+    "url": "https://lvboda.cn",
+    "email": "lv_boda@163.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lvboda/vscode-img-fast.git"
+  },
+  "icon": "images/logo.png",
+  "homepage": "https://github.com/lvboda/vscode-img-fast/blob/master/README.md",
+  "bugs": {
+    "url": "https://github.com/lvboda/vscode-img-fast/issues"
+  },
+  "keywords": [
+    "img-fast",
+    "figure bed",
+    "image",
+    "picture",
+    "paste",
+    "upload",
+    "markdown",
+    ".md",
+    "picgo"
+  ],
+  "engines": {
+    "vscode": "^1.73.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onCommand:img-fast.upload",
+    "onCommand:img-fast.delete"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "img-fast.upload",
+        "title": "%package.commands.upload%"
+      },
+      {
+        "command": "img-fast.delete",
+        "title": "%package.commands.delete%"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "%package.configuration.title%",
+      "properties": {
+        "img-fast.openPasteAutoUpload": {
+          "type": "boolean",
+          "default": true,
+          "description": "%package.configuration.openPasteAutoUpload%"
+        },
+        "img-fast.openDeleteHover": {
+          "type": "boolean",
+          "default": true,
+          "description": "%package.configuration.openDeleteHover%"
+        },
+        "img-fast.authorization": {
+          "type": "string",
+          "default": "your token...",
+          "description": "%package.configuration.authorization%"
+        },
+        "img-fast.imgRename": {
+          "type": "string",
+          "default": "${hash}-${yyyy}-${MM}-${dd}-${hh}-${mm}-${ss}-${timestamp}-${name}",
+          "description": "%package.configuration.imgRename%"
+        },
+        "img-fast.outputRename": {
+          "type": "string",
+          "default": "![${name}](${url})",
+          "description": "%package.configuration.outputRename%"
+        },
+        "img-fast.uploadUrl": {
+          "type": "string",
+          "default": "",
+          "description": "%package.configuration.uploadUrl%"
+        },
+        "img-fast.uploadMethod": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ],
+          "default": "POST",
+          "description": "%package.configuration.uploadMethod%"
+        },
+        "img-fast.uploadFormDataKey": {
+          "type": "string",
+          "default": "file",
+          "description": "%package.configuration.uploadFormDataKey%"
+        },
+        "img-fast.uploadedKey": {
+          "type": "string",
+          "default": "",
+          "description": "%package.configuration.uploadedKey%"
+        },
+        "img-fast.deleteUrl": {
+          "type": "string",
+          "default": "",
+          "description": "%package.configuration.deleteUrl%"
+        },
+        "img-fast.deleteMethod": {
+          "type": "string",
+          "enum": [
+            "GET",
+            "POST",
+            "PUT",
+            "PATCH",
+            "DELETE"
+          ],
+          "default": "DELETE",
+          "description": "%package.configuration.deleteMethod%"
+        },
+        "img-fast.deleteQueryKey": {
+          "type": "string",
+          "default": "",
+          "description": "%package.configuration.deleteQueryKey%"
+        },
+        "img-fast.deletedFlag": {
+          "type": "string",
+          "enum": [
+            "none",
+            "url",
+            "layout"
+          ],
+          "default": "layout",
+          "description": "%package.configuration.deletedFlag%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.73.0",
+    "@typescript-eslint/eslint-plugin": "^5.42.0",
+    "@typescript-eslint/parser": "^5.42.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.26.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "axios": "^1.1.3",
+    "crypto": "^1.0.1",
+    "electron-clipboard-ex": "^1.3.3",
+    "form-data": "^4.0.0"
+  }
+}

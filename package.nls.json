@@ -1,0 +1,31 @@
+{
+    "package.commands.upload": "upload the clipboard image",
+    "package.commands.delete": "delete the cloud image synchronously",
+    "package.configuration.title": "img-fast configuration",
+    "package.configuration.openPasteAutoUpload": "whether to enable automatic uploading of pasted images (enabled by default)",
+    "package.configuration.openDeleteHover": "Whether to enable the deletion hover window (enabled by default)",
+    "package.configuration.authorization": "'Authorization' of the request header",
+    "package.configuration.imgRename": "rename image before uploading (refer to documentation)",
+    "package.configuration.outputRename": "customize the paste format after the images is uploaded (refer to the document)",
+    "package.configuration.uploadUrl": "upload api",
+    "package.configuration.uploadMethod": "upload request method",
+    "package.configuration.uploadFormDataKey": "'formData' key",
+    "package.configuration.uploadedKey": "key of the image url of the response body of the upload (if it is empty, it matches the first url)",
+    "package.configuration.deleteUrl": "delete api (Disable synchronous deletion if the value is empty)",
+    "package.configuration.deleteMethod": "delete request method",
+    "package.configuration.deleteQueryKey": "the key of the delete api query parameter (params if null)",
+    "package.configuration.deletedFlag": "operations after a successful delete api call (refer to documentation)",
+
+    "error.feedback": "feedback",
+    "error.close": "close",
+
+    "handler.notNull": "cannot be empty, please check your configuration",
+    "handler.uploading": "uploading",
+    "handler.deleting": "deleting",
+    "handler.syncDelete": "synchronous deletion",
+    "handler.syncDeleteTips": "no upload record of this image was found, the deletion may fail",
+
+    "hook.uploadStatusError": "upload fail, response status code is incorrect",
+    "hook.uploadNoMatchedUrl": "upload fail, url not matched in response data",
+    "hook.deleteStatusError": "delete fail, response status code is incorrect"
+}
