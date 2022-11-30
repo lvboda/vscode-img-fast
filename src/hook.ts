@@ -14,7 +14,7 @@ import type { Image } from './image';
 
 function genHttpError(res: AxiosResponse, title: string) {
     const { status, statusText, data, config } = res;
-    return Error(`${title} url: ${config.url}, method: ${config.method}, status: ${status}, statusText: ${statusText}, response: ${data}.`);
+    return Error(`${title} | url: ${config.url}, method: ${config.method}, status: ${status}, statusText: ${statusText}, response: ${data}.`);
 }
 
 export function beforeUpload(image: Image) {

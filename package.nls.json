@@ -2,11 +2,11 @@
     "package.commands.upload": "upload the clipboard image",
     "package.commands.delete": "delete the cloud image synchronously",
     "package.configuration.title": "img-fast configuration",
-    "package.configuration.openPasteAutoUpload": "whether to enable automatic uploading of pasted pictures (enabled by default)",
+    "package.configuration.openPasteAutoUpload": "whether to enable automatic uploading of pasted images (enabled by default)",
     "package.configuration.openDeleteHover": "Whether to enable the deletion hover window (enabled by default)",
     "package.configuration.authorization": "'Authorization' of the request header",
     "package.configuration.imgRename": "rename image before uploading (refer to documentation)",
-    "package.configuration.outputRename": "customize the paste format after the picture is uploaded (refer to the document)",
+    "package.configuration.outputRename": "customize the paste format after the images is uploaded (refer to the document)",
     "package.configuration.uploadUrl": "upload api",
     "package.configuration.uploadMethod": "upload request method",
     "package.configuration.uploadFormDataKey": "'formData' key",
@@ -25,7 +25,7 @@
     "handler.syncDelete": "synchronous deletion",
     "handler.syncDeleteTips": "no upload record of this image was found, the deletion may fail",
 
-    "hook.uploadStatusError": "<upload fail: response status code is incorrect>",
-    "hook.uploadNoMatchedUrl": "<upload fail: url not matched in response data>",
-    "hook.deleteStatusError": "<delete fail: response status code is incorrect>"
+    "hook.uploadStatusError": "upload fail, response status code is incorrect",
+    "hook.uploadNoMatchedUrl": "upload fail, url not matched in response data",
+    "hook.deleteStatusError": "delete fail, response status code is incorrect"
 }

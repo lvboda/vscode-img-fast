@@ -25,7 +25,7 @@
     "handler.syncDelete": "同步删除",
     "handler.syncDeleteTips": "未查询到该图片的上传记录，可能会删除失败",
 
-    "hook.uploadStatusError": "<上传失败 响应状态码不正确>",
-    "hook.uploadNoMatchedUrl": "<上传失败 未在响应数据中匹配到url>",
-    "hook.deleteStatusError": "<删除失败 响应状态码不正确>"
+    "hook.uploadStatusError": "上传失败 响应状态码不正确",
+    "hook.uploadNoMatchedUrl": "上传失败 未在响应数据中匹配到url",
+    "hook.deleteStatusError": "删除失败 响应状态码不正确"
 }
