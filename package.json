@@ -3,12 +3,13 @@
   "displayName": "Img Fast",
   "description": "A vscode plugin that can quickly upload clipboard images and get image URL.",
   "version": "1.0.0",
-  "publisher": "Boda Lü",
+  "publisher": "lvboda",
   "author": {
     "name": "Boda Lü",
     "url": "https://lvboda.cn",
     "email": "lv_boda@163.com"
   },
+  "license": "SEE LICENSE IN LICENSE",
   "repository": {
     "type": "git",
     "url": "https://github.com/lvboda/vscode-img-fast.git"
