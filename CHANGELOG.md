@@ -1,9 +1,5 @@
 # Change Log
 
-All notable changes to the "vscode-img-fast" extension will be documented in this file.
+## 1.0.0 (2022-11-30)
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- Initial release
+- Initial release v1.0.0

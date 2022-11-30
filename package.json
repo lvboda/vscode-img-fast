@@ -22,11 +22,12 @@
     "img-fast",
     "figure bed",
     "image",
+    "picture",
     "paste",
     "upload",
     "markdown",
     ".md",
-    "pic"
+    "picgo"
   ],
   "engines": {
     "vscode": "^1.73.0"
@@ -35,7 +36,9 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onLanguage:markdown",
+    "onCommand:img-fast.upload",
+    "onCommand:img-fast.delete"
   ],
   "main": "./out/extension.js",
   "contributes": {
