@@ -4,7 +4,7 @@
 
 # Img Fast
 
-[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/github/release/lvboda/vscode-img-fast?color=orange)](https://github.com/lvboda/vscode-img-fast/releases)
+[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
 
 一个可以快速上传剪切板图片并获取图片 URL 的 vscode 插件。
 
@@ -16,6 +16,7 @@
 
 ## 功能
 
+- 支持windows/macOS操作系统
 - 支持截图粘贴上传
 - 支持单/多文件粘贴上传
 - 支持单/多文件删除（云端删除）
@@ -145,9 +146,9 @@
 如果本插件对您有帮助的话，欢迎打赏～
 
 <div align="center">
-    <img width="35%" src="./images/wechat-qrcode.png"/>
+    <img width="20%" src="./images/wechat-qrcode.png"/>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <img width="35%" src="./images/alipay-qrcode.png"/>
+    <img width="20%" src="./images/alipay-qrcode.png"/>
 </div>
 
 ## 许可

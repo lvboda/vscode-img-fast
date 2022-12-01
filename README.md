@@ -4,7 +4,7 @@
 
 # Img Fast
 
-[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/github/release/lvboda/vscode-img-fast?color=orange)](https://github.com/lvboda/vscode-img-fast/releases)
+[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
 
 A vscode plugin that can quickly upload clipboard images and get image URL.
 
@@ -14,13 +14,14 @@ A vscode plugin that can quickly upload clipboard images and get image URL.
 
 ![](./images/demo.gif "demo")
 
-## Function
+## Feature
 
-- Support screenshot paste upload.
-- Support single/multiple file paste upload.
-- Support single/multiple file deletion. (cloud deletion)
-- Support customize upload and delete shortcut keys.
-- Support with `multipart/form-data` formalized transmission interface, such as `smms`.
+- Supports windows/macOS.
+- Supports screenshot paste upload.
+- Supports single/multiple file paste upload.
+- Supports single/multiple file deletion. (cloud deletion)
+- Supports customize upload and delete shortcut keys.
+- Supports with `multipart/form-data` formalized transmission interface, such as `smms`.
 
 ## Install
 
@@ -145,9 +146,9 @@ For vscode loading speed, this plugin will only be activated in markdown documen
 If this plugin is helpful to you, welcome to sponsor ~
 
 <div align="center">
-    <img width="35%" src="./images/wechat-qrcode.png"/>
+    <img width="20%" src="./images/wechat-qrcode.png"/>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <img width="35%" src="./images/alipay-qrcode.png"/>
+    <img width="20%" src="./images/alipay-qrcode.png"/>
 </div>
 
 ## License
