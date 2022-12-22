@@ -4,7 +4,7 @@
 
 # Img Fast
 
-[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
+[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/i/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
 
 一个可以快速上传剪切板图片并获取图片 URL 的 vscode 插件。
 

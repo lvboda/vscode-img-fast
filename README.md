@@ -4,7 +4,7 @@
 
 # Img Fast
 
-[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
+[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/i/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
 
 A vscode plugin that can quickly upload clipboard images and get image URL.
 
