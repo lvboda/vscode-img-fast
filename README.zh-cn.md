@@ -4,7 +4,7 @@
 
 # Img Fast
 
-[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/github/release/lvboda/vscode-img-fast?color=orange)](https://github.com/lvboda/vscode-img-fast/releases)
+[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/i/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
 
 一个可以快速上传剪切板图片并获取图片 URL 的 vscode 插件。
 
@@ -16,6 +16,7 @@
 
 ## 功能
 
+- 支持windows/macOS操作系统
 - 支持截图粘贴上传
 - 支持单/多文件粘贴上传
 - 支持单/多文件删除（云端删除）
@@ -134,7 +135,7 @@
 
 其他图床的 api 可能和本插件不适配，比如用 github 做图床，图片是通过 base64 编码以字符串的方式传输的，作为一个轻量化的插件，没有办法适配所有的图床。（后续会考虑以配置js文件的形式适配其他图床）
 
-推荐使用自定义图床，我这里提供可适配插件的上传、删除服务，直接[下载](https://github.com/lvboda/upload-server/releases)就可以部署使用，只需要准备一台服务器即可。（后续可能会出一篇服务器与部署相关的文章详细说明）
+推荐使用自定义图床，我这里提供可适配插件的上传、删除服务，直接[下载](https://github.com/lvboda/uploader/releases)就可以部署使用，只需要准备一台服务器即可。（后续可能会出一篇服务器与部署相关的文章详细说明）
 
 如果因为网络或其他原因导致上传时间很长，您可以继续编写文档，上传成功后会插入到上传前光标的位置，不会覆盖掉之后的文本。
 
@@ -145,9 +146,9 @@
 如果本插件对您有帮助的话，欢迎打赏～
 
 <div align="center">
-    <img width="35%" src="./images/wechat-qrcode.png"/>
+    <img width="20%" src="./images/wechat-qrcode.png"/>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <img width="35%" src="./images/alipay-qrcode.png"/>
+    <img width="20%" src="./images/alipay-qrcode.png"/>
 </div>
 
 ## 许可

@@ -4,7 +4,7 @@
 
 # Img Fast
 
-[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/github/release/lvboda/vscode-img-fast?color=orange)](https://github.com/lvboda/vscode-img-fast/releases)
+[![](https://badgen.net/badge/icon/github?icon=github&label)](https://github.com/lvboda/vscode-img-fast)  [![](https://badgen.net/github/license/lvboda/vscode-img-fast?color=green)](./LICENSE)  [![](https://badgen.net/vs-marketplace/i/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)  [![](https://badgen.net/vs-marketplace/v/lvboda.vscode-img-fast?color=orange)](https://marketplace.visualstudio.com/items?itemName=lvboda.vscode-img-fast)
 
 A vscode plugin that can quickly upload clipboard images and get image URL.
 
@@ -14,13 +14,14 @@ A vscode plugin that can quickly upload clipboard images and get image URL.
 
 ![](./images/demo.gif "demo")
 
-## Function
+## Feature
 
-- Support screenshot paste upload.
-- Support single/multiple file paste upload.
-- Support single/multiple file deletion. (cloud deletion)
-- Support customize upload and delete shortcut keys.
-- Support with `multipart/form-data` formalized transmission interface, such as `smms`.
+- Supports windows/macOS.
+- Supports screenshot paste upload.
+- Supports single/multiple file paste upload.
+- Supports single/multiple file deletion. (cloud deletion)
+- Supports customize upload and delete shortcut keys.
+- Supports with `multipart/form-data` formalized transmission interface, such as `smms`.
 
 ## Install
 
@@ -134,7 +135,7 @@ Add and save.
 
 Because the API of other image beds may not be compatible with this plugin, such as using github as an image bed, the images are transmitted in the form of strings through base64 encoding, as a lightweight plugin, there is no way to adapt to all image beds. (We will consider adapting other image beds in the form of configuration js files in the future)
 
-Therefore, it is recommended to use a custom figure bed. I provide a suitable configuration plugin upload and delete service. You can use it by [download](https://github.com/lvboda/upload-server/releases) it directly. You only need to prepare a server.
+Therefore, it is recommended to use a custom figure bed. I provide a suitable configuration plugin upload and delete service. You can use it by [download](https://github.com/lvboda/uploader/releases) it directly. You only need to prepare a server.
 
 If the upload takes a long time due to the network or other reasons, you can continue to write the document. After the upload is successful, it will be inserted at the position of the cursor before uploading, and the subsequent text will not be overwritten.
 
@@ -145,9 +146,9 @@ For vscode loading speed, this plugin will only be activated in markdown documen
 If this plugin is helpful to you, welcome to sponsor ~
 
 <div align="center">
-    <img width="35%" src="./images/wechat-qrcode.png"/>
+    <img width="20%" src="./images/wechat-qrcode.png"/>
     &nbsp;&nbsp;&nbsp;&nbsp;
-    <img width="35%" src="./images/alipay-qrcode.png"/>
+    <img width="20%" src="./images/alipay-qrcode.png"/>
 </div>
 
 ## License
