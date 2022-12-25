@@ -1,4 +1,3 @@
-'use strict';
 import * as path from 'node:path';
 import { window, commands, Range, Position, Hover, Uri, MarkdownString } from 'vscode';
 

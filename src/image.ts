@@ -1,4 +1,3 @@
-'use strict';
 import * as path from 'node:path';
 import { hasImage, readFilePaths, saveImageAsPng } from 'electron-clipboard-ex';
 
