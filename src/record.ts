@@ -1,4 +1,3 @@
-'use strict';
 import * as fs from 'node:fs';
 
 import { RECORD_FILE_PATH } from './constant';

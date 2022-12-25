@@ -1,4 +1,3 @@
-'use strict';
 import { window, MarkdownString } from 'vscode';
 
 import { PLUGIN_NAME } from './constant';

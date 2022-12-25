@@ -135,7 +135,7 @@ Add and save.
 
 Because the API of other image beds may not be compatible with this plugin, such as using github as an image bed, the images are transmitted in the form of strings through base64 encoding, as a lightweight plugin, there is no way to adapt to all image beds. (We will consider adapting other image beds in the form of configuration js files in the future)
 
-Therefore, it is recommended to use a custom figure bed. I provide a suitable configuration plugin upload and delete service. You can use it by [download](https://github.com/lvboda/uploader/releases) it directly. You only need to prepare a server.
+Therefore, it is recommended to use a custom figure bed. I provide a suitable configuration plugin upload and delete service. You can use it by [download](https://github.com/lvboda/file-upload-server/releases) it directly. You only need to prepare a server.
 
 If the upload takes a long time due to the network or other reasons, you can continue to write the document. After the upload is successful, it will be inserted at the position of the cursor before uploading, and the subsequent text will not be overwritten.
 

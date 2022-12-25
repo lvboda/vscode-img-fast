@@ -1,4 +1,3 @@
-'use strict';
 import { commands, languages, workspace } from 'vscode';
 
 import { COMMAND_UPLOAD_KEY, COMMAND_DELETE_KEY } from './constant';

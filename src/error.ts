@@ -1,4 +1,3 @@
-'use strict';
 import localize from './localize';
 import { showMessage } from './tips';
 import { REPOSITORY_URL } from './constant';

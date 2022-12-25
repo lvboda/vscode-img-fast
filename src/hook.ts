@@ -1,4 +1,3 @@
-'use strict';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { window, Range, Position } from 'vscode';
