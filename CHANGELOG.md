@@ -4,7 +4,7 @@
 
 ### Features
 
-- support `vgy.me`.
+- support `vgy.me`. ([#10](https://github.com/lvboda/vscode-img-fast/issues/10)) ([23db2d1](https://github.com/lvboda/vscode-img-fast/pull/11/commits/23db2d12b2f22f010aa9c2ff3b3e75864c83b8c3)), closes [#10](https://github.com/lvboda/vscode-img-fast/issues/10)
 
 ## 1.0.2 (2022-12-01)
 
