@@ -21,7 +21,7 @@ A vscode plugin that can quickly upload clipboard images and get image URL.
 - Supports single/multiple file paste upload.
 - Supports single/multiple file deletion. (cloud deletion)
 - Supports customize upload and delete shortcut keys.
-- Supports with `multipart/form-data` formalized transmission interface, such as `smms`.
+- Supports with `multipart/form-data` formalized transmission interface, such as `smms/vgy.me`.
 
 ## Install
 
