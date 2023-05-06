@@ -14,6 +14,9 @@ export async function uploadImage(image: Image) {
     const form = new formData();
     form.append(uploadFormDataKey, fs.createReadStream(image.beforeUploadPath));
 
+    // TODO 这里先简单处理 以后要支持更多图床的时候把逻辑提出来
+    if (uploadUrl?.includes('//vgy.me')) form.append('userkey', authorization);
+
     return await axios.request<string>({
         url: uploadUrl,
         method: uploadMethod,

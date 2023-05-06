@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.3 (2023-05-06)
+
+### Features
+
+- support `vgy.me`.
+
 ## 1.0.2 (2022-12-01)
 
 ### Bug Fixes
