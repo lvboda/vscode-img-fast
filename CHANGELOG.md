@@ -1,5 +1,11 @@
 # Change Log
 
+## 1.0.4 (2024-6-30)
+
+### Bug Fixes
+
+- Fix readRecord error. ([#13](https://github.com/lvboda/vscode-img-fast/issues/13)) ([131826f](https://github.com/lvboda/vscode-img-fast/pull/26/commits/131826fe9640ae910f5e77879cdfbb12d7119487)), closes [#13](https://github.com/lvboda/vscode-img-fast/issues/13)
+
 ## 1.0.3 (2023-05-06)
 
 ### Features
