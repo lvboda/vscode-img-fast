@@ -144,7 +144,7 @@ export function createOnDidChangeTextDocumentHandler() {
         // call
         const outputUrls = await commands.executeCommand<string[]>(COMMAND_UPLOAD_KEY, editRange);
 
-        if (!outputUrls.length) return;
+        if (!outputUrls || !outputUrls.length) return;
         // calculate recall position
         const preEndTextLen = outputUrls[outputUrls.length - 1].length;
         const preLine = start.line + outputUrls.length - 1;

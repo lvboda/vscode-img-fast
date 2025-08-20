@@ -9,6 +9,9 @@ export function invokeWithErrorHandler<T extends (...args: any[]) => any>(cb: T)
             res = await cb(...args);
         } catch (err: any) {
             panic(err);
+            // Return an empty array as default for functions that should return arrays
+            // This prevents "Cannot read properties of undefined reading 'length'" errors
+            res = [] as ReturnType<T>;
         }
         return res;
     };
@@ -21,6 +24,8 @@ export function invokeWithErrorHandlerSync<T extends (...args: any[]) => any>(cb
             res = cb(...args);
         } catch (err: any) {
             panic(err);
+            // Return undefined as default for sync functions (they typically don't return arrays)
+            res = undefined as ReturnType<T>;
         }
         return res;
     };
