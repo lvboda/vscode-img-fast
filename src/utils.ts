@@ -9,7 +9,7 @@ import type { Image } from "./image";
 
 export function getEventOpts(event: TextDocumentChangeEvent) {
     const cc = event.contentChanges;
-    return cc.length ? cc[0] : { text: "", range: {} as Range };
+    return cc && cc.length ? cc[0] : { text: "", range: {} as Range };
 }
 
 export function getFileHash(path: string) {
